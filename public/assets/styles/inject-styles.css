@@ -1,0 +1,160 @@
+.login-box-custom {
+    background-color: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 20px !important;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-items: center;
+    gap: 20px;
+}
+
+.register-box-custom {
+    background-color: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 20px !important;
+    height: 500px !important;
+    width: 500px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-items: center;
+    padding: 5px;
+}
+
+.title-custom {
+    text-align: center !important;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 20px !important;
+}
+
+.field-label-custom {
+    text-align: left;
+    color: #555;
+    font-size: 1.2rem;
+}
+
+.input-field-custom {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f9fafb !important;
+    font-size: 1rem;
+    color: #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-field-custom:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.login-button-custom {
+    margin-left: 40% !important;
+    background-color: #423dc8 !important;
+    width: 80px !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: none !important;
+    padding: 0px !important;
+}
+
+.bottom-links-custom {
+    width: auto;
+    border: none;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 8px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.forgot-password-custom {
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #4027e9 !important;
+}
+
+div:has(.forgot-password-custom) {
+    margin-top: 10px;
+}
+
+.forgot-password-custom:hover {
+    text-decoration: underline;
+}
+
+.login-google-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+td:has(.login-google-custom) {
+    display: flex;
+    justify-content: center;
+}
+
+.login-google-custom img {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+}
+
+.custom-image {
+    filter: invert(1) hue-rotate(360deg);
+}
+
+.custom-cell div:nth-child(2) {
+    margin-top: 5px;
+    width: 100% !important;
+    text-align: left !important;
+}
+
+.custom-cell a {
+    color: #1e90ff;
+    text-decoration: none;
+    font-weight: 400 !important;
+}
+
+.custom-cell .notice {
+    margin-bottom: 5px;
+    color: #d3d3d3;
+}
+
+.custom-cell a:hover {
+    text-decoration: underline;
+    color: #87cefa;
+}
+
+.custom-cell .notice:hover {
+    color: #ffffff;
+}
+
+.custom-cell-fifth {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
