@@ -6,7 +6,7 @@ const Footer = () => {
                     Developed by <a href="https://www.linkedin.com/in/vaibhavdev" target="_blank" className="font-semibold hover:text-blue-500 dark:text-zinc-200 text-zinc-800">Vaibhav Kesarwani</a>
                 </p>
                 <p className="text-xs dark:text-zinc-200 text-zinc-800">
-                    If you want to contribute or report any issues, <br />check out <a href="https://github.com/MaanasSehgal/Codeforces-Lite/issues" target="_blank" className="hover:underline text-blue-500">issues</a> or <a href="https://github.com/MaanasSehgal/Codeforces-Lite" target="_blank" className="hover:underline text-blue-500">repo</a>.
+                    If you want to contribute or report any issues, <br />check out <a href="https://github.com/Vaibhav-kesarwani/Codeforces-Quest/issues" target="_blank" className="hover:underline text-blue-500">issues</a> or <a href="https://github.com/Vaibhav-kesarwani/Codeforces-Quest" target="_blank" className="hover:underline text-blue-500">repo</a>.
                 </p>
             </div>
         </footer>
