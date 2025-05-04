@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "version": "1.3.7",
     "name": "Codeforces Quest - Dark Mode & Code Runner",
-    "description": "Provides dark theme and code runner for Codeforces",
+    "description": "Provides a professional dark theme and integrated code execution environment for an enhanced Codeforces experience.",
     "author": "Vaibhav Kesarwani",
     "browser_specific_settings": {
         "gecko": {
