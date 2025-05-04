@@ -25,7 +25,7 @@ const TestCaseNotAccess: React.FC = () => {
                             </a>
                             or
                             <a
-                                href="https://track-hub-tan.vercel.app/problems"
+                                href="https://codeforces-problem-recommender.vercel.app/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-1 text-blue-500 hover:text-blue-600"
