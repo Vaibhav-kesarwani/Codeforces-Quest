@@ -7,17 +7,16 @@ export const EXECUTE_CODE_LIMIT = 3 * 1000; // max number of minutes to execute 
 export const accessRestrictionMessage = `/* 
 '''
 Code Editor Access:
-    -> The code editor is available only while solving
-         a codeforces problem. Functioanlities are
-         disabled on other pages.
+    -> The code editor is only available while viewing 
+          or solving a Codeforces problem. 
+          Functionality is disabled on other pages.
 
-    -> To access full functionality,
-         Please visit: https://codeforces.com
-         and navigate to a problem.
+    -> To unlock full features,
+         please visit: https://codeforces.com 
+         and open any problem.
 
-    -> If you find any issues, please feel free
-         to report the issue at:
-         https://github.com/MaanasSehgal/Codeforces-Lite/issues
+    -> If you encounter any issues, feel free to report them here:
+         https://github.com/Vaibhav-kesarwani/Codeforces-Quest/issues
 '''
 */
 `;
