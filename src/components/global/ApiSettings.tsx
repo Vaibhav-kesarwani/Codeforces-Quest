@@ -30,6 +30,7 @@ const ApiSettings: React.FC = () => {
             } else {
                 toast.error('Invalid API key. Please check and try again');
             }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error('Failed to validate API key. Please check your internet connection');
         }
