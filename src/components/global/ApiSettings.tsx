@@ -56,7 +56,7 @@ const ApiSettings: React.FC = () => {
                         <div className="flex items-center gap-2">
                             <Key size={16} className="text-gray-500" />
                             <span className="font-medium text-gray-700 dark:text-gray-300">
-                                Judge0 API Key
+                                API Key
                             </span>
                         </div>
                         <div className="flex items-center gap-3">
