@@ -17,3 +17,15 @@ const sendTabMessage = (message) => {
         }
     });
 }
+
+// 1. Handle tab activation
+browserAPI.tabs.onActivated.addListener(async (activeInfo) => {
+    try {
+        const tab = await browserAPI.tabs.get(activeInfo.tabId);
+        if (tab.url) {
+            sendTabMessage({ type: 'TAB_SWITCH', url: tab.url });
+        }
+    } catch (error) {
+        console.error('Error getting tab info or sending message:', error);
+    }
+});
