@@ -40,3 +40,18 @@ browserAPI.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         });
     }
 });
+
+// 3. Handle window focus changes
+browserAPI.windows.onFocusChanged.addListener((windowId) => {
+    if (windowId !== browserAPI.windows.WINDOW_ID_NONE) {
+        // Window is focused
+        browserAPI.windows.get(windowId, { populate: true }, (window) => {
+            if (window && window.tabs) {
+                const tab = window.tabs.find((t) => t.active);
+                if (tab && tab.url) {
+                    sendTabMessage({ type: 'WINDOW_FOCUSED', url: tab.url });
+                }
+            }
+        });
+    }
+});
