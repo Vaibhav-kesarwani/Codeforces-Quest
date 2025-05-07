@@ -170,3 +170,17 @@ const sortToggleImgInvert = () => {
         }
     });
 };
+
+const removeSortToggleImgInvert = () => {
+    if (!currentURL.includes("codeforces.com/problemset")) {
+        return;
+    }
+    const anchorElements = document.querySelectorAll("a.non-decorated");
+
+    anchorElements.forEach((anchor) => {
+        const imgElements = anchor.querySelectorAll("img");
+        if (imgElements && imgElements.length > 1) {
+            imgElements[1].classList.remove("custom-image");
+        }
+    });
+};
