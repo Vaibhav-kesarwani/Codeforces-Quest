@@ -55,3 +55,15 @@ browserAPI.windows.onFocusChanged.addListener((windowId) => {
         });
     }
 });
+
+// 4. Handle when the extension loses focus
+browserAPI.idle.onStateChanged.addListener((newState) => {
+    if (newState === 'active') {
+        // When the user returns to the browser
+        browserAPI.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs.length > 0) {
+                sendTabMessage({ type: 'USER_RETURNED', url: tabs[0].url });
+            }
+        });
+    }
+});
