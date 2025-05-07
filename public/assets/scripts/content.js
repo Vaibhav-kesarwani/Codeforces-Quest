@@ -60,3 +60,11 @@ browserAPI.storage.onChanged.addListener((changes, areaName) => {
         }
     }
 });
+
+browserAPI.runtime.onMessage.addListener((message, sendResponse) => {
+    if (message.type === 'APPLY_CUSTOM_THEME') {
+        applyCustomThemeSettings(message.settings);
+        sendResponse({ success: true });
+    }
+    return true;
+});
