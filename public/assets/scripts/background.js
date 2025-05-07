@@ -8,3 +8,12 @@ if (!isFirefox && browserAPI.sidePanel) {
         .setPanelBehavior({ openPanelOnActionClick: true })
         .catch((error) => console.error(error));
 }
+
+// Helper function to send messages with browser compatibility
+const sendTabMessage = (message) => {
+    browserAPI.runtime.sendMessage(message, (response) => {
+        if (browserAPI.runtime.lastError) {
+            console.log('No receiver for the message or error occurred:', browserAPI.runtime.lastError);
+        }
+    });
+}
