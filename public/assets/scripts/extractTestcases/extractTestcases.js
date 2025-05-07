@@ -50,3 +50,16 @@ const extractTestCases = async (tab) => {
         console.error("Error extracting test cases:", error);
     }
 };
+
+browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.requestTestCases) {
+        browserAPI.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const activeTab = tabs[0];
+            if (activeTab) {
+                extractTestCases(activeTab);
+                sendResponse({ status: "extracting" });
+            }
+        });
+        return true;
+    }
+});
