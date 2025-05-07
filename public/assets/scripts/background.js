@@ -29,3 +29,14 @@ browserAPI.tabs.onActivated.addListener(async (activeInfo) => {
         console.error('Error getting tab info or sending message:', error);
     }
 });
+
+// 2. Handle tab URL updates
+browserAPI.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.url) {
+        browserAPI.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs.length > 0 && tabs[0].id === tabId) {
+                sendTabMessage({ type: 'TAB_UPDATED', url: changeInfo.url });
+            }
+        });
+    }
+});
