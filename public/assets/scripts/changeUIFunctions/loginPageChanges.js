@@ -69,3 +69,58 @@ const changeLoginPageUI = () => {
         gmailLinkDiv.replaceWith(anchorTag);
     }
 };
+
+const removeChangeLoginPageUI = () => {
+    const currentURL = window.location.href;
+    if (!currentURL.includes("codeforces.com/enter") && !currentURL.includes("codeforces.com/register")) {
+        return;
+    }
+    const loginBox = document.querySelector(".enterPage > .borderTopRound");
+    if (loginBox) {
+        loginBox.classList.remove("login-box-custom");
+    }
+
+    const registerBox = document.querySelector(".registrationForm");
+    if (registerBox) {
+        registerBox.classList.remove("register-box-custom");
+    }
+
+    const loginToCodeForcesTitle = document.querySelector(".caption.titled");
+    if (loginToCodeForcesTitle) {
+        loginToCodeForcesTitle.classList.remove("title-custom");
+    }
+
+    const fields = document.querySelectorAll(".enterForm .field-name");
+    fields.forEach((field) => {
+        field.classList.remove("field-label-custom");
+    });
+
+    const inputFields = document.querySelectorAll("#handleOrEmail, #password");
+    inputFields.forEach((inputField) => {
+        inputField.classList.remove("input-field-custom");
+    });
+
+    const loginButton = document.querySelector(".submit");
+    if (loginButton) {
+        loginButton.classList.remove("login-button-custom");
+    }
+
+    const bottomLinks = document.querySelector(".bottom-links");
+    if (bottomLinks) {
+        bottomLinks.classList.remove("bottom-links-custom");
+    }
+
+    const forgotPasswordLink = document.querySelector("a[href='/passwordRecovery']");
+    if (forgotPasswordLink) {
+        forgotPasswordLink.classList.remove("forgot-password-custom");
+    }
+
+    const googleLoginButton = document.querySelector(".login-google-custom");
+    if (googleLoginButton) {
+        const originalGmailLink = document.createElement("div");
+        originalGmailLink.className = "useGmailLink";
+        originalGmailLink.innerHTML = "Use Gmail";
+
+        googleLoginButton.replaceWith(originalGmailLink);
+    }
+};
