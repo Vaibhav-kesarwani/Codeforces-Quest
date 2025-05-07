@@ -134,3 +134,26 @@ const injectDarkModeCSS = () => {
         }
     });
 };
+
+const applyCustomThemeSettings = (settings) => {
+    if (customStyleElement) {
+        customStyleElement.remove();
+    }
+
+    customStyleElement = document.createElement("style");
+    customStyleElement.innerHTML = `
+      html {
+        filter: 
+          brightness(${settings.brightness}%) 
+          contrast(${settings.contrast}%) 
+          sepia(${settings.sepia}%) 
+          grayscale(${settings.grayscale}%)
+          invert(${settings.invert}%) !important;
+      }
+    `;
+
+    if (document.head) {
+        document.head.appendChild(customStyleElement);
+    }
+};
+
