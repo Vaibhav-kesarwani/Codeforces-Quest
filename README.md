@@ -43,3 +43,30 @@
 <br>
 
 #### This all-in-one solution brings coding, testing, and submission into a unified, streamlined interface—supercharging your competitive programming experience on Codeforces.
+
+## 2. Code Execution
+
+- #### 🔌 API Configuration 
+  - Secure and scalable code execution using [Judge0]()
+  - Supports multiple languages with real-time output
+  - Seamless integration with editor for code submission and result fetching
+  
+- #### 📤 Compilation Results Handling
+  - Structured output displaying
+    - Execution results 
+    - Time and memory metrics
+    - Compilation and runtime errors (with **syntax context**)
+  - Color-coded feedback for fast debugging
+  - Clear distinction between sample test cases and custom inputs
+
+- #### 🚧 Limitations and Future Enhancements
+  - **Current Limitations**
+    - No support for interactive problems yet
+    - Editor settings are not synced across devices
+    - Supports live contests but does not display the scoreboard.
+    - Requires internet access for code execution via Judge0
+  - **Upcoming Features**
+    - Interactive problem support
+    - AI-powered hint system and problem insights
+    - Contest mode with lockable editor and timed submissions
+    - GitHub integration to sync and save progress
