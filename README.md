@@ -70,3 +70,21 @@
     - AI-powered hint system and problem insights
     - Contest mode with lockable editor and timed submissions
     - GitHub integration to sync and save progress
+
+## 3. Dark Mode with Enhanced Customization Options
+
+#### Codeforces Quest features a carefully optimized dark theme that enhances visual comfort, especially during long coding sessions. It delivers a seamless and consistent appearance across the entire platform.
+
+### 🌙 Key Features of the Dark Theme
+
+- **Eye Comfort:** Minimizes eye strain by reducing screen-to-environment contrast, ideal for low-light conditions and long coding sessions.
+- **Battery Efficiency:** Helps save battery on OLED and AMOLED devices by limiting bright pixel usage.
+- **Enhanced Code Readability:** Syntax highlighting is carefully optimized to make keywords, variables, and comments stand out clearly without causing visual fatigue.
+- **User Control:** Easily toggle between dark and light modes to suit your personal preference anytime.
+- **Theme Customizer:** Personalize your dark theme experience with adjustable settings including
+  - Brightness
+  - Contrast
+  - Sepia tone
+  - Grayscale
+  - Invert colors
+- **Theme Presets:** Quickly switch between curated theme presets for fast and convenient visual adjustments.
