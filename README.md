@@ -1,3 +1,11 @@
 # Codeforces Quest
 
-𝗖𝗼𝗱𝗲𝗳𝗼𝗿𝗰𝗲𝘀 𝗤𝘂𝗲𝘀𝘁 ⚔️ is a Chrome extension designed to elevate your Codeforces experience. It includes a built-in code editor with features like code-saving, language switching, and a timer to track sessions. Enjoy an optimized dark theme, streamlined UI for smoother navigation, and templates 🧩 to speed up your workflow.
+#### A Chrome extension with a sidebar that enhances the Codeforces experience, transforming it into a more efficient and productive platform for competitive programmers.
+
+# Overview
+
+#### Codeforces Quest delivers a streamlined and enhanced experience tailored for competitive programmers on Codeforces.
+
+#### With improved UI elements, a sleek dark theme, and a fully integrated code editor, this extension offers everything you need for a smooth and seamless coding experience on Codeforces.
+
+---
