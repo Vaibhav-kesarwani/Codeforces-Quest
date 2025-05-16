@@ -40,8 +40,6 @@
   - Auto-tab indentation for smooth coding flow
   - Language-specific code formatting support
 
-<br>
-
 #### This all-in-one solution brings coding, testing, and submission into a unified, streamlined interface—supercharging your competitive programming experience on Codeforces.
 
 ## 2. Code Execution
