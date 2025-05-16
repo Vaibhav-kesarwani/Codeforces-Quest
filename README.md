@@ -88,3 +88,12 @@
   - Grayscale
   - Invert colors
 - **Theme Presets:** Quickly switch between curated theme presets for fast and convenient visual adjustments.
+
+## 4. Editor Theme Selection
+
+#### Codeforces Quest now offers a diverse selection of editor themes tailored to fit your unique coding style and preferences.
+
+- **🏛️ Classic Themes:** `Default`, `Dark`, `Light`, `High Contrast` — timeless and reliable.
+- **🌟 Popular Coding Themes:** `Monokai`, `Dracula`, `GitHub`, `Nord`, `Solarized`, and many more to fit your vibe.
+- **🔄 Seamless Switching:** Change themes instantly without interrupting your flow.
+- **👀 Theme Preview:** Try before you pick to find your perfect coding look.
