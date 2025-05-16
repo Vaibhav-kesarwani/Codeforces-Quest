@@ -44,6 +44,8 @@
 
 ## 2. Code Execution
 
+#### Experience fast, reliable code execution directly within the editor, powered by the robust Judge0 API. Enjoy real-time feedback across multiple languages without leaving the problem page. Our system seamlessly handles compilation results, making debugging clear and efficient.
+
 - #### 🔌 API Configuration 
   - Secure and scalable code execution using [Judge0]()
   - Supports multiple languages with real-time output
@@ -68,6 +70,8 @@
     - AI-powered hint system and problem insights
     - Contest mode with lockable editor and timed submissions
     - GitHub integration to sync and save progress
+  
+#### While currently limited in some areas, Codeforces Quest is rapidly evolving with exciting features like interactive problem support, AI-powered hints, and contest modes. We’re committed to enhancing your coding workflow with smarter tools and seamless integrations.
 
 ## 3. Dark Mode with Enhanced Customization Options
 
