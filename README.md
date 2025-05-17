@@ -155,3 +155,12 @@ To enable the `Run Code` feature, follow these simple steps:
 5. Open the **Codeforces Quest** extension and navigate to **API Settings**
 6. Click `Edit`, then paste your **API key**
 7. Hit **Save** — the Run Code feature is now ready to use!
+
+---
+
+# Contributing
+
+#### Contributions make this project better and help build an amazing open-source community.  
+#### If you'd like to contribute, please check out our [Contribution Guide](CONTRIBUTING.md) to get started with setup instructions, guidelines, and best practices.  
+
+#### We welcome your ideas, bug fixes, and new features!
