@@ -121,3 +121,11 @@
 - **🌑 Dark Theme Consistency:** Custom styling across extension components to perfectly match the dark theme.
 - **🕹️ User Control:** Toggle the enhanced UI on or off at any time—switch easily between the original and improved layouts based on your preference.
 
+## 7. Code Formatting
+
+#### Codeforces Quest now features a powerful built-in code formatter to keep your code neat and readable
+
+- **⚡ One-Click Formatting** for all supported languages
+- **📘 Language-Specific Rules** to match standard coding styles
+- **🔧 Customizable Indentation** to suit your personal preferences
+
