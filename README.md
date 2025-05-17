@@ -63,21 +63,16 @@
 #### Experience fast, reliable code execution directly within the editor, powered by the robust Judge0 API. Enjoy real-time feedback across multiple languages without leaving the problem page. Our system seamlessly handles compilation results, making debugging clear and efficient.
 
 - ### 🔌 API Configuration
-
-  ![Api Configuration](/public/assets/images/api-configuration.png) 
   
-  - Secure and scalable code execution using [Judge0]()
+  - Secure and scalable code execution using [Judge0](https://judge0.com/)
   
   - Supports multiple languages with real-time output
   
   - Seamless integration with editor for code submission and result fetching
+
+  ![Api Configuration](/public/assets/images/api-configuration.png) 
   
 - ### 📤 Compilation Results Handling
-
-  | Test Case Pass | Test Case Fail |
-  |----------------|----------------|
-  | ![](/public/assets/images/test-case-pass.png) | ![](/public/assets/images/test-case-fail.png) |
-
   
   - Structured output displaying
   
@@ -90,6 +85,10 @@
   - Color-coded feedback for fast debugging
   
   - Clear distinction between sample test cases and custom inputs
+
+  | Test Case Pass | Test Case Fail |
+  |----------------|----------------|
+  | ![](/public/assets/images/test-case-pass.png) | ![](/public/assets/images/test-case-fail.png) |
 
 - ### 🚧 Limitations and Future Enhancements
   
@@ -224,19 +223,23 @@
 To enable the `Run Code` feature, follow these simple steps:
 
 
-1. Go to [Sulu > Consumer Dashboard]()
+1. Go to [Sulu > Consumer Dashboard](https://platform.sulu.sh/portal/consumer/dashboard?period=7_days)
 
 2. **Sign up or log in** to your Sulu account
 
 3. Under the **Authentication section**, copy your **Live API Key**
 
-4. Make sure to **subscribe** to activate API usage
+    ![Api key](/public/assets/images/api-config-key.png)
 
-5. Open the **Codeforces Quest** extension and navigate to **API Settings**
+1. Make sure to **subscribe** to activate API usage
 
-6. Click `Edit`, then paste your **API key**
+2. Open the **Codeforces Quest** extension and navigate to **API Settings**
 
-7. Hit **Save** — the Run Code feature is now ready to use!
+3. Click `Edit`, then paste your **API key**
+
+    ![Edit api key](/public/assets/images/api-configuration.png)
+
+4. Hit **Save** — the Run Code feature is now ready to use!
 
 ---
 
