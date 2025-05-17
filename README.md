@@ -107,3 +107,16 @@
 - **🚀 Boosts Productivity:** Focus directly on problem-solving, reducing setup time during contests or practice.
 - **🎯 Smart Cursor Placement:** Use the `$0` marker in your template to set the starting cursor position exactly where you need it.
 - **🔁 Cursor Memory:** Remembers your cursor position when switching tabs or revisiting problems—pick up right where you left off.
+
+## 6. UI Enhancements
+
+#### Codeforces Quest upgrades the overall UI of Codeforces, making it more accessible, visually polished, and user-friendly.
+
+#### Interface elements are repositioned and refined for a cleaner layout and smoother navigation experience.
+
+- **🎨 Refined Interface:** Makes Codeforces more accessible, visually appealing, and user-friendly.
+- **🧭 Improved Layout:** Optimized element positioning for a cleaner and more intuitive navigation experience.
+- **🗂️ Structured Problemset Page:** Enhanced alignment and spacing for a more organized and readable layout.
+- **🔐 Modernized Auth Pages:** Redesigned login and registration pages for a smoother and faster onboarding experience.
+- **🌑 Dark Theme Consistency:** Custom styling across extension components to perfectly match the dark theme.
+- **🕹️ User Control:** Toggle the enhanced UI on or off at any time—switch easily between the original and improved layouts based on your preference.
