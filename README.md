@@ -143,3 +143,15 @@
 #### This cross-browser support ensures a seamless Codeforces Quest experience, no matter which browser you prefer to use.
 
 ---
+
+# How to Get and Set Up Your API Key?
+
+To enable the `Run Code` feature, follow these simple steps:
+
+1. Go to [Sulu > Consumer Dashboard]()
+2. **Sign up or log in** to your Sulu account
+3. Under the **Authentication section**, copy your **Live API Key**
+4. Make sure to **subscribe** to activate API usage
+5. Open the **Codeforces Quest** extension and navigate to **API Settings**
+6. Click `Edit`, then paste your **API key**
+7. Hit **Save** — the Run Code feature is now ready to use!
