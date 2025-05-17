@@ -226,3 +226,30 @@ To enable the `Run Code` feature, follow these simple steps:
 #### If you'd like to contribute, please check out our [Contribution Guide](CONTRIBUTING.md) to get started with setup instructions, guidelines, and best practices.  
 
 #### We welcome your ideas, bug fixes, and new features!
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.  
+Feel free to use, modify, and share it. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 📢 Contact
+
+If you have any suggestions, questions, or feedback, feel free to reach out:
+
+- 📬 **Email**: [vaibhavkesarwani100@gmail.com](mailto:vaibhavkesarwani100@gmail.com)  
+- 💼 **GitHub**: [@Vaibhav-kesarwani](https://github.com/Vaibhav-kesarwani)
+- 🔥 **Portfolio**: [vaibhav kesarwani](https://vaibhavkesarwani.vercel.app/)
+
+---
+
+## 🌟 Support & Share
+
+If you find this repository helpful:
+
+- ⭐ Star it on GitHub  
+- 🍴 Fork it to build your own version  
+- 📣 Share it with your developer friends and communities!
