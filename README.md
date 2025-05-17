@@ -120,4 +120,3 @@
 - **🔐 Modernized Auth Pages:** Redesigned login and registration pages for a smoother and faster onboarding experience.
 - **🌑 Dark Theme Consistency:** Custom styling across extension components to perfectly match the dark theme.
 - **🕹️ User Control:** Toggle the enhanced UI on or off at any time—switch easily between the original and improved layouts based on your preference.
-
