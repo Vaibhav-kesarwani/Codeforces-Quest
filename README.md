@@ -232,7 +232,7 @@ To enable the `Run Code` feature, follow these simple steps:
 ## 📄 License
 
 This project is licensed under the **MIT License**.  
-Feel free to use, modify, and share it. See the [LICENCE](LICENCE) file for details.
+Feel free to use, modify, and share it. See the [LICENSE](LICENSE) file for details.
 
 ---
 
