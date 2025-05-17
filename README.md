@@ -129,3 +129,17 @@
 - **📘 Language-Specific Rules** to match standard coding styles
 - **🔧 Customizable Indentation** to suit your personal preferences
 
+
+---
+
+# Browser Compatibility
+
+#### Codeforces Quest now works seamlessly across multiple browsers:
+- [Google Chrome]()
+- [Mozilla Firefox]()
+- [Brave Browser]()
+- [Microsoft Edge]()
+
+#### This cross-browser support ensures a seamless Codeforces Quest experience, no matter which browser you prefer to use.
+
+---
