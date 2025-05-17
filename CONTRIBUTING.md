@@ -78,9 +78,20 @@ Contributions are what make the open source community such an amazing place to l
     git push origin <your-branch-name>
     ```
 
-6. When ready, create a **Pull Request (PR)** for review:
+6. #### Pull Request Checklist
+    **Before submitting your PR, make sure you:**
+    
+    - ✅ Followed the coding style and wrote production-ready code.
+    
+    - ✅ Included descriptive commit messages.
+    
+    - ✅ **Signed your commits with a GPG key**. This verifies your identity and ensures trust in the codebase.
+    
+        👉 Need help? Follow GitHub’s guide here: [Signing Commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
 
-    - Go to the original repository on GitHub
+7. When ready, create a **Pull Request (PR)** for review:
+
+    - Go to the [original repository](https://github.com/Vaibhav-kesarwani/Codeforces-Quest) on GitHub
   
     - Click on Pull requests and then New pull request
     
