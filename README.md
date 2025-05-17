@@ -4,6 +4,8 @@
 
 # Overview
 
+![Hero Section](/public/assets/images/overview.png)
+
 #### Codeforces Quest delivers a streamlined and enhanced experience tailored for competitive programmers on Codeforces.
 
 #### With improved UI elements, a sleek dark theme, and a fully integrated code editor, this extension offers everything you need for a smooth and seamless coding experience on Codeforces.
@@ -13,6 +15,8 @@
 # Features
 
 ## 1. Powerful Monaco Code Editor with Built-in Execution and Persistent Storage Features
+
+![Code Editor](/public/assets/images/code-editor.png)
 
 #### Write, test, and submit your code right from the problem page using our advanced Monaco editor—no need to switch tabs or upload files manually.
 
@@ -58,7 +62,9 @@
 
 #### Experience fast, reliable code execution directly within the editor, powered by the robust Judge0 API. Enjoy real-time feedback across multiple languages without leaving the problem page. Our system seamlessly handles compilation results, making debugging clear and efficient.
 
-- #### 🔌 API Configuration 
+- ### 🔌 API Configuration
+
+  ![Api Configuration](/public/assets/images/api-configuration.png) 
   
   - Secure and scalable code execution using [Judge0]()
   
@@ -66,7 +72,12 @@
   
   - Seamless integration with editor for code submission and result fetching
   
-- #### 📤 Compilation Results Handling
+- ### 📤 Compilation Results Handling
+
+  | Test Case Pass | Test Case Fail |
+  |----------------|----------------|
+  | ![](/public/assets/images/test-case-pass.png) | ![](/public/assets/images/test-case-fail.png) |
+
   
   - Structured output displaying
   
@@ -80,7 +91,7 @@
   
   - Clear distinction between sample test cases and custom inputs
 
-- #### 🚧 Limitations and Future Enhancements
+- ### 🚧 Limitations and Future Enhancements
   
   - **Current Limitations**
   
@@ -106,6 +117,8 @@
 
 ## 3. Dark Mode with Enhanced Customization Options
 
+![Dark theme support](/public/assets/images/dark-theme.png)
+
 #### Codeforces Quest features a carefully optimized dark theme that enhances visual comfort, especially during long coding sessions. It delivers a seamless and consistent appearance across the entire platform.
 
 ### 🌙 Key Features of the Dark Theme
@@ -130,6 +143,8 @@
 
 ## 4. Editor Theme Selection
 
+![Editor theme support](/public/assets/images/editor-theme.png)
+
 #### Codeforces Quest now offers a diverse selection of editor themes tailored to fit your unique coding style and preferences.
 
 
@@ -143,6 +158,7 @@
 
 ## 5. Custom Templates & Smart Cursor Placement
 
+![Custom template](/public/assets/images/custom-template.png)
 
 - **✨ Auto-Loaded Templates:** Automatically load your custom code templates when opening a new problem—no more writing boilerplate from scratch.
 
@@ -155,6 +171,10 @@
 - **🔁 Cursor Memory:** Remembers your cursor position when switching tabs or revisiting problems—pick up right where you left off.
 
 ## 6. UI Enhancements
+
+| Login UI | Problem UI |
+|------------|----------|
+| ![](/public/assets/images/login-ui.png) | ![](/public/assets/images/problem-ui.png) |
 
 #### Codeforces Quest upgrades the overall UI of Codeforces, making it more accessible, visually polished, and user-friendly.
 
