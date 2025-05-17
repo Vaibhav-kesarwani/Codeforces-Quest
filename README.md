@@ -99,3 +99,11 @@
 - **🌟 Popular Coding Themes:** `Monokai`, `Dracula`, `GitHub`, `Nord`, `Solarized`, and many more to fit your vibe.
 - **🔄 Seamless Switching:** Change themes instantly without interrupting your flow.
 - **👀 Theme Preview:** Try before you pick to find your perfect coding look.
+
+## 5. Custom Templates & Smart Cursor Placement
+
+- **✨ Auto-Loaded Templates:** Automatically load your custom code templates when opening a new problem—no more writing boilerplate from scratch.
+- **⚙️ Predefined Boilerplate:** Include common code like I/O functions, imports, and debug snippets to jump straight into solving.
+- **🚀 Boosts Productivity:** Focus directly on problem-solving, reducing setup time during contests or practice.
+- **🎯 Smart Cursor Placement:** Use the `$0` marker in your template to set the starting cursor position exactly where you need it.
+- **🔁 Cursor Memory:** Remembers your cursor position when switching tabs or revisiting problems—pick up right where you left off.
