@@ -1,3 +1,5 @@
+import { EditorSettingsTypes } from "../types/types";
+
 export const STORAGE_LIMIT_BYTES = 7 * 1024 * 1024; // local storage limit in bytes, 7MB
 export const SINGLE_CODE_LIMIT_BYTES = 0.5 * 1024 * 1024; // single code limit in bytes, 0.5MB
 export const MAX_PROBLEM_IO_SIZE = 15; // max number problem IO size
@@ -5,20 +7,50 @@ export const MAX_TEST_CASES = 5; // max number of test cases
 export const EXECUTE_CODE_LIMIT = 3 * 1000; // max number of minutes to execute code
 
 export const accessRestrictionMessage = `/* 
-'''
 Code Editor Access:
-    -> The code editor is only available while viewing 
-          or solving a Codeforces problem. 
-          Functionality is disabled on other pages.
+• The code editor is available only while solving
+  a codeforces problem. Functioanlities are
+  disabled on other pages.
 
-    -> To unlock full features,
-         please visit: https://codeforces.com 
-         and open any problem.
+• To access full functionality,
+  Please visit: https://codeforces.com
+  and navigate to a problem.
 
-    -> If you encounter any issues, feel free to report them here:
-         https://github.com/Vaibhav-kesarwani/Codeforces-Quest/issues
-'''
+• If you find any issues, please feel free
+  to report the issue at:
+  https://github.com/Vaibhav-kesarwani/Codeforces-Quest/issues
 */
 `;
 
-export const isProduction = false;
+export const PREVIEW_CODE = 
+`#include <bits/stdc++.h>
+using namespace std;
+
+// Checks if a number is prime
+bool isPrime(int n) {
+    if (n <= 1) return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    if (isPrime(n)) cout << "YES";
+    else cout << "NO";
+    return 0;
+}
+`;
+
+export const DEFAULT_EDITOR_SETTINGS: EditorSettingsTypes = {
+     indentSize: 4,
+     theme: 'vs-dark',
+     lineWrapping: false,
+     autoSuggestions: true,
+     minimap: true,
+     lineNumbers: true,
+};
+
+export const isProduction = true;
