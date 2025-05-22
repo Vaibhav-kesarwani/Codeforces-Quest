@@ -20,10 +20,9 @@ import { browserAPI } from '../../utils/browser/browserDetect';
 interface MainProps {
     setShowOptions: (show: boolean) => void;
     theme: string;
-    tabIndent: number;
 }
 
-const Main: React.FC<MainProps> = ({ setShowOptions, theme, tabIndent }) => {
+const Main: React.FC<MainProps> = ({ setShowOptions, theme }) => {
     const monacoInstanceRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
     // Zustand store hooks
@@ -32,6 +31,7 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme, tabIndent }) => {
         fontSize,
         currentSlug,
         setCurrentSlug,
+        setCurrentUrl,
         setTotalSize,
         testCases,
         isRunning,
@@ -65,6 +65,7 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme, tabIndent }) => {
             if (tab && tab.url) {
                 const newSlug = getSlug(tab.url);
                 setCurrentSlug(newSlug);
+                setCurrentUrl(tab.url);
                 if (newSlug) {
                     let codeForUrl = getCodeMap().get(newSlug)?.code || '';
                     codeForUrl = codeForUrl === '' ? localStorage.getItem('template') || '' : codeForUrl;
@@ -158,7 +159,7 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme, tabIndent }) => {
                 runCode={runCode}
                 testCases={testCases.testCases}
                 isFormating={isFormating}
-                handleFormatCode={() => formatCode(monacoInstanceRef, language, tabIndent, setIsFormating)}
+                handleFormatCode={() => formatCode(monacoInstanceRef, language,  setIsFormating)}
             />
 
             <div className="w-full h-[calc(100vh-88px)]">
@@ -168,7 +169,6 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme, tabIndent }) => {
                             monacoInstanceRef={monacoInstanceRef}
                             language={language}
                             fontSize={fontSize}
-                            tabIndent={tabIndent}
                         />
                     }
                     bottom={<TestCases />}
