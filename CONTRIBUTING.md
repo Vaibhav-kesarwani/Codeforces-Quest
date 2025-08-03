@@ -27,7 +27,7 @@ To set up **Codeforces Quest** locally, follow these steps:
 
 2. Clone your forked repo:  
     ```bash
-    git clone <Your Forked Repo>
+    git clone https://github.com/Vaibhav-kesarwani/Codeforces-Quest.git
     ```
 
 3. Install dependencies:
