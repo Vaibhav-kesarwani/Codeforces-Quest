@@ -288,6 +288,6 @@ If you find this repository helpful:
 
 #### Thanks to all the wonderful contributors 💖
 
-<a href="https://github.com/your-repo-url/graphs/contributors">
+<a href="https://github.com/Vaibhav-kesarwani/Codeforces-Quest/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Vaibhav-kesarwani/Codeforces-Quest" />
 </a>
