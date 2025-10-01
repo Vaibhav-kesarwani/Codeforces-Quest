@@ -248,10 +248,9 @@ To enable the `Run Code` feature, follow these simple steps:
 
 ---
 ## 🌟GSSoc 
-![GSSoC Logo](https://github.com/dimpal-yadav/Codeforces-Quest/blob/main/public/assets/images/GirlScript-Summer-of-Code.png)
+![GSSoC Logo](https://github.com/dimpal-yadav/Codeforces-Quest/blob/main/public/assets/images/GSSoC.png)
 
 🌟 **Exciting News...**
-
 🚀 This project is now an official part of GirlScript Summer of Code – GSSoC'25! 💃🎉💻 We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow *Codeforces-Quest!* Let’s make learning and career development smarter – together! 🌟👨‍💻👩‍💻
 
 👩‍💻 GSSoC is one of India’s **largest 3-month-long open-source programs** that encourages developers of all levels to contribute to real-world projects 🌍 while learning, collaborating, and growing together. 🌱
@@ -268,7 +267,6 @@ To enable the `Run Code` feature, follow these simple steps:
 ## 🏆 **GSSoC 2025 Guidelines**
 
 ### 📋 **For Participants**
-
 #### ✅ **Do's**
 - ✅ **Read documentation** thoroughly before contributing
 - ✅ **Follow code style** and project structure
@@ -276,23 +274,19 @@ To enable the `Run Code` feature, follow these simple steps:
 - ✅ **Test your changes** before submitting PR
 - ✅ **Be respectful** and collaborative
 - ✅ **Ask questions** if you're unsure about anything
-
 #### ❌ **Don'ts**
 - ❌ **Don't spam** with multiple PRs for same issue
 - ❌ **Don't copy code** without understanding
 - ❌ **Don't make unnecessary** changes
 - ❌ **Don't ignore** code review feedback
 - ❌ **Don't forget** to update documentation when needed
-  
 ### 🎯 **Contribution Levels**
 | Level | Description | Points | Badge |
 |-------|-------------|--------|-------|
 | 🥉 **Beginner** | Fix typos, update docs, minor bug fixes | 5-10 | ![Beginner](https://img.shields.io/badge/Level-Beginner-green) |
 | 🥈 **Intermediate** | Add features, improve UI/UX, performance | 15-25 | ![Intermediate](https://img.shields.io/badge/Level-Intermediate-blue) |
 | 🥇 **Advanced** | Major features, architecture improvements | 30-50 | ![Advanced](https://img.shields.io/badge/Level-Advanced-red) |
-
 ---
-
 # Contributing
 
 #### Contributions make this project better and help build an amazing open-source community.  
