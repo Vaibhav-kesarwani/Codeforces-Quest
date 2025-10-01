@@ -8,7 +8,7 @@
 #### A Chrome extension with a sidebar that enhances the Codeforces experience, transforming it into a more efficient and productive platform for competitive programmers.
 ---
 
-## 🌟 GSSoc 
+## 🌟 GSSoC 
 ![GSSoC Logo](https://github.com/dimpal-yadav/Codeforces-Quest/blob/main/public/assets/images/GSSoC.png)
 🌟 **Exciting News...**
 This project is now an official part of GirlScript Summer of Code – GSSoC'25! 🎉 We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow *Codeforces-Quest!* Let’s make learning and career development smarter – together!
