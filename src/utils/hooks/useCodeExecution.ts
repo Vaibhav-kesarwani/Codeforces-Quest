@@ -1,3 +1,4 @@
+// src/utils/hooks/useCodeExecution.ts
 import { useCFStore } from '../../zustand/useCFStore';
 import { adjustCodeForJudge0 } from '../codeAdjustments';
 import { EXECUTE_CODE_LIMIT, isProduction } from '../../data/constants';
@@ -8,6 +9,7 @@ import { getUserId } from '../dom/getUserId';
 import { getTimeLimit } from '../dom/getTimeLimit';
 import { getProblemUrl } from '../dom/getProblemUrl';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { safeFetch, getErrorMessage, ApiError } from '../apiErrorHandler';
 
 const languageMap: { [key: string]: number } = {
     'java': 62,
@@ -84,27 +86,97 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         setIsRunning(false);
     };
 
-    const setCatchError = (error: any) => {
-        if (error.name === 'AbortError') {
-            resetStates();
-            return;
-        }
-        if (error.message.includes("Insufficie")) {
+    const handleApiError = (error: ApiError) => {
+        console.error('API Error:', error);
+        
+        // Handle rate limit errors
+        if (error.code === 'RATE_LIMIT' || error.message.includes('Rate Limit') || error.message.includes('Insufficie')) {
             setShowApiLimitAlert(true);
             testCases.ErrorMessage = "Rate Limit Exceeded";
             testCases.testCases.forEach((testCase: any) => {
-                testCase.Output = "Rate Limit Exceeded";
+                testCase.Output = "Rate Limit Exceeded. Please wait or upgrade your API plan.";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
             return;
         }
 
-        testCases.ErrorMessage = "Internal Error";
+        // Handle network errors
+        if (error.code === 'NETWORK_ERROR') {
+            testCases.ErrorMessage = "Network Error";
+            testCases.testCases.forEach((testCase: any) => {
+                testCase.Output = "No internet connection. Please check your network and try again.";
+                testCase.TimeAndMemory = { Time: '0', Memory: '0' };
+            });
+            return;
+        }
+
+        // Handle timeout errors
+        if (error.code === 'TIMEOUT') {
+            testCases.ErrorMessage = "Request Timeout";
+            testCases.testCases.forEach((testCase: any) => {
+                testCase.Output = "Request timed out. The server is taking too long to respond.";
+                testCase.TimeAndMemory = { Time: '0', Memory: '0' };
+            });
+            return;
+        }
+
+        // Handle HTTP errors
+        if (error.code === 'HTTP_ERROR') {
+            testCases.ErrorMessage = `Server Error (${error.status || 'Unknown'})`;
+            testCases.testCases.forEach((testCase: any) => {
+                testCase.Output = getErrorMessage(error);
+                testCase.TimeAndMemory = { Time: '0', Memory: '0' };
+            });
+            return;
+        }
+
+        // Generic error
+        testCases.ErrorMessage = "Execution Error";
         testCases.testCases.forEach((testCase: any) => {
-            testCase.Output = "Something went wrong. Please try again later or contact support.";
+            testCase.Output = getErrorMessage(error);
             testCase.TimeAndMemory = { Time: '0', Memory: '0' };
         });
+    };
+
+    const setCatchError = (error: any) => {
+    // Handle abort errors
+    if (error.name === 'AbortError') {
+        resetStates();
+        return;
     }
+
+    // Check for network errors (TypeError usually means network issue)
+    if (error instanceof TypeError || error.name === 'TypeError') {
+        const errorMsg = (error.message || '').toLowerCase();
+        if (errorMsg.includes('fetch') || 
+            errorMsg.includes('network') || 
+            errorMsg.includes('failed') ||
+            errorMsg.includes('internet')) {
+            handleApiError({
+                message: 'Network error. Please check your internet connection.',
+                code: 'NETWORK_ERROR'
+            });
+            return;
+        }
+    }
+
+    // Convert legacy error handling to new format
+    if (error.message?.includes("Insufficie") || error.message?.includes("Rate Limit")) {
+        handleApiError({
+            message: error.message,
+            code: 'RATE_LIMIT',
+            status: 429
+        });
+        return;
+    }
+
+    // Generic error fallback
+    handleApiError({
+        message: error.message || 'Unknown error occurred',
+        code: 'UNKNOWN_ERROR',
+        details: error
+    });
+};
 
     const createSubmissionPayload = (code: string, input: string, timeLimit: number) => ({
         language_id: languageMap[language],
@@ -124,68 +196,81 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             });
         });
 
-        const resultsResponse = await makeJudge0CERequest(
-            `submissions/batch?base64_encoded=true&tokens=${tokens.join(',')}&fields=stdout,stderr,status,compile_output,status_id,time,memory`,
-            { method: 'GET', headers: { 'X-Judge0-Region': region } },
-            apiKey
-        );
-        return resultsResponse.json();
-    };
-
-    // Unified API handlers
-    const makeJudge0CERequest = async (endpoint: string, options: any, apiKey: string) => {
-        const controller = executionState.startNew();
-        const baseUrl = options.method === 'GET' ? 'https://ce.judge0.com' : 'https://judge0-ce.p.sulu.sh';
-        return fetch(`${baseUrl}/${endpoint}`, {
-            ...options,
-            headers: {
-                'Accept': 'application/json',
-                ...options.headers,
-                'Authorization': apiKey ? `Bearer ${apiKey}` : ''
+        const endpoint = `https://ce.judge0.com/submissions/batch?base64_encoded=true&tokens=${tokens.join(',')}&fields=stdout,stderr,status,compile_output,status_id,time,memory`;
+        
+        const { data, error } = await safeFetch(
+            endpoint,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Judge0-Region': region,
+                    'Authorization': apiKey ? `Bearer ${apiKey}` : ''
+                },
+                signal: controller.signal
             },
-            signal: controller.signal
-        });
+            30000
+        );
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
     };
 
     const executeCodeCE = async (code: string, apiKey: string, timeLimit: number) => {
-        const submissions = testCases.testCases.map(testCase => createSubmissionPayload(code, testCase.Input, timeLimit));
+        const submissions = testCases.testCases.map(testCase => 
+            createSubmissionPayload(code, testCase.Input, timeLimit)
+        );
 
         try {
-            const submitResponse = await makeJudge0CERequest('submissions/batch?base64_encoded=true', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ submissions })
-            }, apiKey);
+            const controller = executionState.startNew();
+            
+            // Submit batch request
+            const { data: batchResponse, error: submitError } = await safeFetch(
+                'https://judge0-ce.p.sulu.sh/submissions/batch?base64_encoded=true',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': apiKey ? `Bearer ${apiKey}` : ''
+                    },
+                    body: JSON.stringify({ submissions }),
+                    signal: controller.signal
+                },
+                30000
+            );
 
-            if (submitResponse.status === 429) {
-                setShowApiLimitAlert(true);
-                testCases.ErrorMessage = "Rate Limit Exceeded";
+            // Handle submission errors
+            if (submitError) {
+                handleApiError(submitError);
+                return;
+            }
+
+            // Validate batch response
+            if (!batchResponse || !Array.isArray(batchResponse)) {
+                const errorDetail = batchResponse?.error || 'Invalid response from Judge0';
+                testCases.ErrorMessage = 'Compilation Error';
                 testCases.testCases.forEach((testCase: any) => {
-                    testCase.Output = "Rate Limit Exceeded";
+                    testCase.Output = errorDetail;
                     testCase.TimeAndMemory = { Time: '0', Memory: '0' };
                 });
                 return;
             }
 
-            const batchResponse = await submitResponse.json();
-
-            if (!batchResponse || !Array.isArray(batchResponse)) {
-                const errorDetail = batchResponse?.error || 'Unknown error';
-                testCases.ErrorMessage = `Compilation Error`;
-                testCases.testCases.forEach((testCase: any) => {
-                    testCase.Output = errorDetail;
-                });
-                return;
-            }
-
-            const tokens = batchResponse.map(submission => submission.token);
-            let results = await processResults(tokens, apiKey, submitResponse.headers.get('X-Judge0-Region') || 'AUTO');
+            const tokens = batchResponse.map((submission: any) => submission.token);
+            let results = await processResults(tokens, apiKey, 'AUTO');
 
             if (!results?.submissions) {
-                testCases.ErrorMessage = `Compilation Error`;
-                const errorDetail = decodeURIComponent(escape(atob(results?.error))) || 'Compilation Error';
+                testCases.ErrorMessage = 'Compilation Error';
+                const errorDetail = results?.error 
+                    ? decodeURIComponent(escape(atob(results.error))) 
+                    : 'Failed to get results';
                 testCases.testCases.forEach((testCase: any) => {
                     testCase.Output = errorDetail;
+                    testCase.TimeAndMemory = { Time: '0', Memory: '0' };
                 });
                 return;
             }
@@ -209,6 +294,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
                 testCase.Output = outputResults[index];
                 testCase.TimeAndMemory = timeMemoryResults[index];
             });
+
         } catch (error: any) {
             setCatchError(error);
         }
@@ -227,6 +313,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             alert("Wait for editor to load");
             return;
         }
+        
         const problemName = await getProblemName();
         const userId = await getUserId();
         const timeLimit = await getTimeLimit();
@@ -236,6 +323,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             alert("Please login to run code");
             return;
         }
+        
         setIsRunning(true);
         testCases.ErrorMessage = '';
         testCases.testCases.forEach((testCase: any) => {
@@ -255,11 +343,14 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         await executeCode(code, apiKey || "", timeLimit);
 
         setIsRunning(false);
-        problemName;
-        problemUrl
 
         if (isProduction) {
-            await usageDataHelper(language, testCases, userId).handleUsageData(code, problemUrl, "RUN", problemName);
+            await usageDataHelper(language, testCases, userId).handleUsageData(
+                code, 
+                problemUrl, 
+                "RUN", 
+                problemName
+            );
         }
     };
 
