@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TestCase } from '../../../types/types';
 import { MAX_TEST_CASES } from '../../../data/constants';
 import { useCFStore } from '../../../zustand/useCFStore';
-import { CircleX, Plus, Copy, Check, RotateCcw, Terminal, LoaderCircle } from 'lucide-react';
+import { CircleX, Plus, Copy, Check, RotateCcw, Terminal, LoaderCircle, AlertCircle, WifiOff, Clock, RefreshCw } from 'lucide-react';
 import TestCaseNotAccess from './TestCaseNotAccess';
 import { browserAPI } from '../../../utils/browser/browserDetect';
 
@@ -13,6 +13,10 @@ const TestCases = () => {
     const setTestCases = useCFStore((state) => state.setTestCases);
     const isRunning = useCFStore((state) => state.isRunning);
     const [copied, setCopied] = useState<{ input: boolean, expectedOutput: boolean, output: boolean }>({ input: false, expectedOutput: false, output: false });
+    
+    // New state for error handling
+    const [testCaseError, setTestCaseError] = useState<string | null>(null);
+    const [isRetrying, setIsRetrying] = useState(false);
 
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const outputRef = useRef<HTMLTextAreaElement>(null);
@@ -28,6 +32,28 @@ const TestCases = () => {
         }
     }, [currentSlug, testCases, selectedTab]);
 
+    // New effect for handling test case extraction errors
+    useEffect(() => {
+        const handleMessage = (message: any) => {
+            if (message.testCaseError) {
+                setTestCaseError(message.testCaseError);
+                setIsRetrying(false);
+            }
+            if (message.testCase) {
+                // Only clear error if we successfully got test cases
+                if (Array.isArray(message.testCase) && message.testCase.length > 0) {
+                    setTestCaseError(null);
+                }
+                setIsRetrying(false);
+            }
+        };
+
+        browserAPI.runtime.onMessage.addListener(handleMessage);
+        return () => {
+            browserAPI.runtime.onMessage.removeListener(handleMessage);
+        };
+    }, []);
+
     const isAllTestCasesPassed = () => {
         if (!testCases.testCases[selectedTab]?.Output) return false;
         return testCases.testCases.length > 0 && testCases.testCases.every((testCase) =>
@@ -41,7 +67,6 @@ const TestCases = () => {
             ? 'border-green-500 dark:border-green-500'
             : 'border-red-500 dark:border-red-500';
     };
-
 
     const getStatusMessage = () => {
         if (isAllTestCasesPassed()) {
@@ -64,7 +89,11 @@ const TestCases = () => {
                                 testCases.ErrorMessage.includes('Runtime Error') ? 'Runtime Error' :
                                     testCases.ErrorMessage.includes('Rate Limit Exceeded') ? 'Rate Limit Exceeded' :
                                         testCases.ErrorMessage.includes('Internal Error') ? 'Internal Error' :
-                                            'Wrong Answer'}
+                                            testCases.ErrorMessage.includes('Network Error') ? 'Network Error' :
+                                                testCases.ErrorMessage.includes('Request Timeout') ? 'Request Timeout' :
+                                                    testCases.ErrorMessage.includes('Server Error') ? 'Server Error' :
+                                                        testCases.ErrorMessage.includes('Execution Error') ? 'Execution Error' :
+                                                            'Wrong Answer'}
                 </div>
             );
         } else if (testCases.testCases[selectedTab]?.Output) {
@@ -134,7 +163,8 @@ const TestCases = () => {
                 Output: ''
             };
 
-            setTestCases({ testCases: [...testCases.testCases.map(testCase => ({ ...testCase, Output: '' })), newTestCase], ErrorMessage: '' }); setSelectedTab(testCases.testCases.length);
+            setTestCases({ testCases: [...testCases.testCases.map(testCase => ({ ...testCase, Output: '' })), newTestCase], ErrorMessage: '' }); 
+            setSelectedTab(testCases.testCases.length);
         }
     };
 
@@ -146,8 +176,36 @@ const TestCases = () => {
     };
 
     const resetTestCases = () => {
+        setTestCaseError(null);
+        setIsRetrying(true);
         browserAPI.runtime.sendMessage({ requestTestCases: true });
         setSelectedTab(0);
+    };
+
+    // Get error icon based on error message
+    const getErrorIcon = () => {
+        if (!testCaseError) return <AlertCircle className="w-5 h-5" />;
+        
+        if (testCaseError.includes('internet') || testCaseError.includes('network') || testCaseError.includes('connection')) {
+            return <WifiOff className="w-5 h-5" />;
+        }
+        if (testCaseError.includes('timeout') || testCaseError.includes('timed out')) {
+            return <Clock className="w-5 h-5" />;
+        }
+        return <AlertCircle className="w-5 h-5" />;
+    };
+
+    // Get error color based on error message
+    const getErrorColor = () => {
+        if (!testCaseError) return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200';
+        
+        if (testCaseError.includes('internet') || testCaseError.includes('network') || testCaseError.includes('connection')) {
+            return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-200';
+        }
+        if (testCaseError.includes('timeout') || testCaseError.includes('timed out')) {
+            return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-200';
+        }
+        return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200';
     };
 
     return (
@@ -168,11 +226,11 @@ const TestCases = () => {
                             <div className="flex gap-2">
                                 <button
                                     onClick={resetTestCases}
-                                    className={`text-gray-500 hover:text-gray-600 ${isRunning ? "opacity-50 cursor-not-allowed" : ""}`}
+                                    className={`text-gray-500 hover:text-gray-600 transition-transform hover:rotate-180 ${isRunning || isRetrying ? "opacity-50 cursor-not-allowed" : ""}`}
                                     title="Reset test cases"
-                                    disabled={isRunning}
+                                    disabled={isRunning || isRetrying}
                                 >
-                                    <RotateCcw size={20} />
+                                    {isRetrying ? <LoaderCircle className="animate-spin" size={20} /> : <RotateCcw size={20} />}
                                 </button>
                                 <button
                                     onClick={addTestCase}
@@ -187,6 +245,51 @@ const TestCases = () => {
                         </h2>
                         {getStatusMessage()}
                     </div>
+
+                    {/* Error notification for test case extraction failures */}
+                    {testCaseError && (
+                        <div className={`mt-4 rounded-lg border-2 p-4 shadow-sm ${getErrorColor()}`}>
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0 mt-0.5">
+                                    {getErrorIcon()}
+                                </div>
+                                
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium leading-relaxed">
+                                        {testCaseError}
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                    <button
+                                        onClick={resetTestCases}
+                                        disabled={isRetrying}
+                                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all hover:scale-105 active:scale-95 bg-white dark:bg-gray-800 border border-current opacity-80 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isRetrying ? (
+                                            <>
+                                                <LoaderCircle className="w-3 h-3 animate-spin" />
+                                                <span>Retrying...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <RefreshCw className="w-3 h-3" />
+                                                <span>Retry</span>
+                                            </>
+                                        )}
+                                    </button>
+                                    
+                                    <button
+                                        onClick={() => setTestCaseError(null)}
+                                        className="p-1 rounded-md transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95"
+                                        aria-label="Close"
+                                    >
+                                        <CircleX className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {testCases.ErrorMessage ? (
                         <div className='mt-3'>
@@ -297,8 +400,6 @@ const TestCases = () => {
                             )}
                         </>
                     )}
-
-
                 </div>
             )}
         </>
