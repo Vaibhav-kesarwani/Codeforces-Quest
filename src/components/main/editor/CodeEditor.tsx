@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+                let codeToSet = templateCode; // Start with the provided templateCode
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
 import 'monaco-editor/esm/vs/language/css/monaco.contribution';
