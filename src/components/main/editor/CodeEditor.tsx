@@ -8,6 +8,7 @@ import { CodeEditorProps, EditorSettingsTypes } from '../../../types/types';
 import themesJSON from '../../../../themes/themelist.json';
 import { useEditorSettings } from '../../../utils/hooks/useEditorSettings';
 import { useCFStore } from '../../../zustand/useCFStore';
+import { getDefaultTemplate } from '../../../utils/services/codeTemplates';
 
 const editorStyle: React.CSSProperties = {
     height: '250px',
@@ -21,22 +22,20 @@ const CodeEditor = ({ monacoInstanceRef, language, fontSize, templateCode }: Cod
     const setEditorSettings = useCFStore((state) => state.setEditorSettings);
     const { getEditorSettings } = useEditorSettings(editorSettings, setEditorSettings);
     const editorRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         const loadThemes = async () => {
             for (const [themeKey, themeName] of Object.entries(themesJSON)) {
                 try {
                     const themeData = await import(`../../../../themes/${themeName}.json`);
-                    if (monaco) {
-                        monaco.editor.defineTheme(themeKey, themeData.default);
-                        // console.log(`Theme ${themeKey} loaded.`);
-                    }
+                    monaco.editor.defineTheme(themeKey, themeData.default);
                 } catch (error) {
-                    // console.error(`Failed to load theme ${themeKey}:`, error);
+                    console.warn(`Failed to load theme ${themeKey}:`, error);
                 }
             }
 
             if (editorRef.current && !monacoInstanceRef.current) {
-                const editorSettings:EditorSettingsTypes = getEditorSettings();
+                const editorSettings: EditorSettingsTypes = getEditorSettings();
                 monacoInstanceRef.current = monaco.editor.create(editorRef.current, {
                     language: language,
                     theme: editorSettings.theme,
@@ -45,17 +44,15 @@ const CodeEditor = ({ monacoInstanceRef, language, fontSize, templateCode }: Cod
                     automaticLayout: true,
                     readOnly: false,
                     wordWrap: editorSettings.lineWrapping ? 'on' : 'off',
-                    minimap: {
-                        enabled: editorSettings.minimap
-                    },
+                    minimap: { enabled: editorSettings.minimap },
                     lineNumbers: editorSettings.lineNumbers ? 'on' : 'off',
                     suggestOnTriggerCharacters: editorSettings.autoSuggestions,
                     quickSuggestions: editorSettings.autoSuggestions,
                 });
 
-                if (templateCode) {
-                    monacoInstanceRef.current.setValue(templateCode);
-                }
+                // Use centralized default template if no templateCode passed
+                const initialCode = templateCode || getDefaultTemplate(language);
+                monacoInstanceRef.current.setValue(initialCode);
             }
         };
 
@@ -67,10 +64,25 @@ const CodeEditor = ({ monacoInstanceRef, language, fontSize, templateCode }: Cod
                 monacoInstanceRef.current = null;
             }
         };
-    }, []);
+    }, []); // run only once
+
+    // Update editor when language or templateCode changes
+    useEffect(() => {
+        if (!monacoInstanceRef.current) return;
+
+        const model = monacoInstanceRef.current.getModel();
+        if (model) {
+            // Update language
+            monaco.editor.setModelLanguage(model, language);
+
+            // Update code with template if provided or fallback
+            const updatedCode = templateCode || getDefaultTemplate(language);
+            monacoInstanceRef.current.setValue(updatedCode);
+        }
+    }, [language, templateCode]);
 
     return (
-        <div className={`flex flex-col h-full w-full`}>
+        <div className="flex flex-col h-full w-full">
             <div className='h-full w-full z-0' ref={editorRef} style={editorStyle}></div>
         </div>
     );

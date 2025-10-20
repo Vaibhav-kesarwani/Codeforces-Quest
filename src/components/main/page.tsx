@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { useCFStore } from '../../zustand/useCFStore';
 import { formatCode, getCodeMap, getSlug } from '../../utils/helper';
+import { getDefaultTemplate } from '../../utils/services/codeTemplates';
 import TopBar from './editor/TopBar';
 import TestCases from './testcases/TestCases';
 import { ResizablePanel } from '../global/ResizablePanel';
@@ -46,12 +47,79 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme }) => {
     const { handleTabEvents } = useTabEvents();
     const [isFormating, setIsFormating] = useState(false);
 
+    // Load current slug and code
     useEffect(() => {
-        setTimeout(() => {
-            setIsSubmitting(false);
-        }, 3000);
-    }, [isSubmitting, currentSlug]);
+        const getCurrentSlug = async () => {
+            const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+            if (!tab?.url) return;
 
+            const newSlug = getSlug(tab.url);
+            setCurrentSlug(newSlug);
+            setCurrentUrl(tab.url);
+
+            if (!newSlug) {
+                setTimeout(() => loadCodeWithCursor(monacoInstanceRef.current, accessRestrictionMessage), 500);
+                return;
+            }
+
+            const codeFromMap = getCodeMap().get(newSlug)?.code || '';
+            const templateCode = localStorage.getItem(language + "_template") || getDefaultTemplate(language);
+            const codeToLoad = codeFromMap || templateCode;
+
+            setTimeout(() => loadCodeWithCursor(monacoInstanceRef.current, codeToLoad), 500);
+            loadTestCases({ slug: newSlug });
+        };
+
+        setTimeout(getCurrentSlug, 100);
+    }, [language]);
+
+    // Reload code when slug or language changes
+    useEffect(() => {
+        if (!currentSlug) return;
+
+        const codeFromMap = getCodeMap().get(currentSlug)?.code || '';
+        const templateCode = localStorage.getItem(language + "_template") || getDefaultTemplate(language);
+        const codeToLoad = codeFromMap || templateCode;
+
+        loadCodeWithCursor(monacoInstanceRef.current, codeToLoad);
+    }, [currentSlug, language]);
+
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === 'Enter') {
+                event.preventDefault();
+                handleSubmission(monacoInstanceRef.current, setIsSubmitting, language, testCases);
+            }
+            if (event.ctrlKey && event.key === "'") {
+                if (!currentSlug) {
+                    alert('Please select a problem to run code.');
+                    return;
+                }
+                runCode();
+            }
+        };
+        document.addEventListener('keydown', handleKeyPress, true);
+        return () => document.removeEventListener('keydown', handleKeyPress, true);
+    }, [currentSlug, runCode]);
+
+    // Editor readOnly toggle
+    useEffect(() => {
+        if (monacoInstanceRef.current) {
+            monacoInstanceRef.current.updateOptions({ readOnly: !currentSlug });
+        }
+    }, [currentSlug]);
+
+    // Tab events listener
+    useEffect(() => {
+        const listener = (message: any, sender: any, sendResponse: (response: any) => void) => {
+            return handleTabEvents(message, sender, sendResponse, monacoInstanceRef.current);
+        };
+        browserAPI.runtime.onMessage.addListener(listener);
+        return () => browserAPI.runtime.onMessage.removeListener(listener);
+    }, [currentSlug, testCases]);
+
+    // Storage & testcases setup
     useEffect(() => {
         const cleanup = setupTestCaseListener();
         const size = initializeStorage();
@@ -59,84 +127,6 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme }) => {
         return cleanup;
     }, []);
 
-    useEffect(() => {
-        const getCurrentSlug = async () => {
-            const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
-            if (tab && tab.url) {
-                const newSlug = getSlug(tab.url);
-                setCurrentSlug(newSlug);
-                setCurrentUrl(tab.url);
-                if (newSlug) {
-                    let codeForUrl = getCodeMap().get(newSlug)?.code || '';
-                    codeForUrl = codeForUrl === '' ? localStorage.getItem('template') || '' : codeForUrl;
-
-                    setTimeout(() => {
-                        loadCodeWithCursor(monacoInstanceRef.current, codeForUrl);
-                    }, 500);
-                    loadTestCases({ slug: newSlug });
-                } else {
-                    setTimeout(() => {
-                        loadCodeWithCursor(monacoInstanceRef.current, accessRestrictionMessage);
-                    }, 500);
-                }
-            }
-        };
-
-        setTimeout(() => {
-            getCurrentSlug();
-        }, 100);
-
-        const handleKeyPress = (event: KeyboardEvent) => {
-            if (event.ctrlKey && event.key === 'Enter') {
-                event.stopPropagation();
-                event.preventDefault();
-                handleSubmission(monacoInstanceRef.current, setIsSubmitting, language, testCases);
-                return false;
-            }
-        };
-        document.addEventListener('keydown', handleKeyPress, true);
-        return () => document.removeEventListener('keydown', handleKeyPress, true);
-    }, []);
-
-    useEffect(() => {
-        const handleRunCode = async (event: KeyboardEvent) => {
-            if (isRunning) return;
-            if (event.ctrlKey && event.key === "'") {
-                if (!currentSlug) {
-                    alert('Please select a problem to run code.');
-                    return;
-                }
-                await runCode();
-            }
-        }
-
-        document.addEventListener('keydown', handleRunCode);
-        return () => document.removeEventListener('keydown', handleRunCode);
-    }, [runCode]);
-
-    useEffect(() => {
-        if (monacoInstanceRef.current) {
-            if (!currentSlug) {
-                monacoInstanceRef.current.updateOptions({
-                    readOnly: true
-                });
-            } else {
-                monacoInstanceRef.current.updateOptions({
-                    readOnly: false
-                });
-            }
-        }
-    }, [currentSlug, monacoInstanceRef.current]);
-
-    useEffect(() => {
-        const listener = (message: any, sender: any, sendResponse: (response: any) => void) => {
-            return handleTabEvents(message, sender, sendResponse, monacoInstanceRef.current);
-        };
-        browserAPI.runtime.onMessage.addListener(listener);
-        return () => {
-            browserAPI.runtime.onMessage.removeListener(listener);
-        };
-    }, [currentSlug, testCases]);
     return (
         <div className='flex flex-col w-full justify-start items-center h-full dark:bg-[#111111]'>
             <ApiLimitAlert
@@ -169,6 +159,7 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme }) => {
                             monacoInstanceRef={monacoInstanceRef}
                             language={language}
                             fontSize={fontSize}
+                            templateCode={localStorage.getItem(language + "_template") || getDefaultTemplate(language)}
                         />
                     }
                     bottom={<TestCases />}
