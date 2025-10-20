@@ -49,40 +49,45 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme }) => {
 
     // Load current slug and code
     useEffect(() => {
-        const getCurrentSlug = async () => {
+        const loadEditorCode = async () => {
             const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
             if (!tab?.url) return;
 
             const newSlug = getSlug(tab.url);
+            if (!newSlug) {
+            loadCodeWithCursor(monacoInstanceRef.current, accessRestrictionMessage);
+            return;
+            }
+
             setCurrentSlug(newSlug);
             setCurrentUrl(tab.url);
 
-            if (!newSlug) {
-                setTimeout(() => loadCodeWithCursor(monacoInstanceRef.current, accessRestrictionMessage), 500);
-                return;
-            }
+            const storedCode = getCodeMap().get(newSlug)?.code || '';
+            const template = localStorage.getItem(language + "_template") || getDefaultTemplate(language);
 
-            const codeFromMap = getCodeMap().get(newSlug)?.code || '';
-            const templateCode = localStorage.getItem(language + "_template") || getDefaultTemplate(language);
-            const codeToLoad = codeFromMap || templateCode;
+            // Use stored code if exists, otherwise template
+            const codeToLoad = storedCode.length > 0 ? storedCode : template;
 
-            setTimeout(() => loadCodeWithCursor(monacoInstanceRef.current, codeToLoad), 500);
+            loadCodeWithCursor(monacoInstanceRef.current, codeToLoad);
+
             loadTestCases({ slug: newSlug });
         };
 
-        setTimeout(getCurrentSlug, 100);
-    }, [language]);
+        // Only run once on mount
+        loadEditorCode();
+        }, []); // <- no dependency on language
 
-    // Reload code when slug or language changes
-    useEffect(() => {
+        // Separate effect: watch language changes, only overwrite if no stored code
+        useEffect(() => {
         if (!currentSlug) return;
 
-        const codeFromMap = getCodeMap().get(currentSlug)?.code || '';
-        const templateCode = localStorage.getItem(language + "_template") || getDefaultTemplate(language);
-        const codeToLoad = codeFromMap || templateCode;
+        const storedCode = getCodeMap().get(currentSlug)?.code || '';
+        if (storedCode.trim().length === 0) {
+            const template = localStorage.getItem(language + "_template") || getDefaultTemplate(language);
+            loadCodeWithCursor(monacoInstanceRef.current, template);
+        }
+        }, [language, currentSlug]);
 
-        loadCodeWithCursor(monacoInstanceRef.current, codeToLoad);
-    }, [currentSlug, language]);
 
     // Keyboard shortcuts
     useEffect(() => {
