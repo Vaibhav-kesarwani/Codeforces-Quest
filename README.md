@@ -249,6 +249,14 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 - **🔧 Customizable Indentation** to suit your personal preferences
 
 
+
+## 8. AI-Powered Problem Recommendations & Analytics
+
+#### Codeforces Quest is being enhanced with an intelligent, standalone data analytics module. This module will provide AI-powered problem recommendations, progress tracking, and predictive skill analytics to personalize your learning path and optimize practice.
+
+
+
+
 ---
 
 # Browser Compatibility
