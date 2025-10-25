@@ -1,7 +1,7 @@
 name: "✨ Feature Request"
 description: "Propose a new feature or enhancement"
 title: "[Feature] <short-title>"
-labels: ["enhancement", "needs-triage"]
+labels: ["enhancement", "needs-triage", "GSSOC25", "level"]
 assignees: []
 
 body:
