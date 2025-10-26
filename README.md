@@ -151,7 +151,7 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
   
     - Interactive problem support
   
-    - AI-powered hint system and problem insights
+    - Smart Problem Recommendations & Analytics (AI-powered problem suggestions, skill tracking)
   
     - Contest mode with lockable editor and timed submissions
   
