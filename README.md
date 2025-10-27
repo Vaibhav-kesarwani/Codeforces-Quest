@@ -263,6 +263,44 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 
 ---
 
+# Testing
+
+#### Codeforces Quest uses **Vitest** for comprehensive unit and component testing to ensure code quality and reliability.
+
+### Running Tests
+
+```bash
+# Run tests in watch mode
+npm test
+
+# Run tests once
+npm run test:run
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+### Test Structure
+
+- Tests are located in `__tests__` folders alongside the code they test
+- Component tests use `@testing-library/react` for React component testing
+- Utilities and logic have dedicated unit tests
+
+### Writing Tests
+
+When contributing, please:
+- Write tests for new features and bug fixes
+- Ensure existing tests pass before submitting PRs
+- Aim for meaningful test coverage
+- Follow the existing test patterns in the codebase
+
+See our [Contributing Guide](CONTRIBUTING.md) for more details on testing guidelines.
+
+---
+
 # How to Get and Set Up Your API Key?
 
 To enable the `Run Code` feature, follow these simple steps:

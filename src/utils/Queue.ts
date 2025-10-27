@@ -60,7 +60,7 @@ export class Queue<T> {
     }
 
     // Convert Queue to JSON
-    toJSON(): any {
+    toJSON(): string {
         const items: T[] = [];
         let current = this.head;
         while (current) {
@@ -71,9 +71,9 @@ export class Queue<T> {
     }
 
     // Creates Queue from JSON
-    static fromJSON<T>(data: any): Queue<T> {
+    static fromJSON<T>(data: T[] | string): Queue<T> {
         const queue = new Queue<T>();
-        const items: T[] = Array.isArray(data) ? data : [];
+        const items: T[] = Array.isArray(data) ? data : JSON.parse(data);
         items.forEach((item) => queue.add(item));
         return queue;
     }

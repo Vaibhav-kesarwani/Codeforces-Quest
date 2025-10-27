@@ -1,4 +1,3 @@
-// src/utils/hooks/useCodeExecution.ts
 import { useCFStore } from '../../zustand/useCFStore';
 import { adjustCodeForJudge0 } from '../codeAdjustments';
 import { EXECUTE_CODE_LIMIT, isProduction } from '../../data/constants';
@@ -10,6 +9,8 @@ import { getTimeLimit } from '../dom/getTimeLimit';
 import { getProblemUrl } from '../dom/getProblemUrl';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { safeFetch, getErrorMessage, ApiError } from '../apiErrorHandler';
+import { Judge0Result, SubmissionResponse, TestCase, BatchResultsResponse } from '../../types/types';
+import { logger } from '../logger';
 
 const languageMap: { [key: string]: number } = {
     'java': 62,
@@ -45,8 +46,13 @@ export const executionState = {
 };
 
 // Status handler
-const handleExecutionStatus = (result: any, testCase: any) => {
-    const statusHandlers: any = {
+const handleExecutionStatus = (result: Judge0Result, testCase: TestCase): string => {
+    interface StatusHandler {
+        message: string | null;
+        getOutput: () => string;
+    }
+    
+    const statusHandlers: Record<number, StatusHandler> = {
         2: { message: 'Runtime Error', getOutput: () => result.description ? decodeURIComponent(escape(atob(result.description))) : 'In queue' },
         3: { message: null, getOutput: () => result.stdout ? decodeURIComponent(escape(atob(result.stdout))) : 'No output, please check your code and print something' },
         4: { message: 'Wrong Answer', getOutput: () => result.stdout ? decodeURIComponent(escape(atob(result.stdout))) : 'No output, please check your code and print something' },
@@ -56,7 +62,7 @@ const handleExecutionStatus = (result: any, testCase: any) => {
         8: { message: 'Time Limit Exceeded', getOutput: () => 'Time Limit Exceeded' },
         9: { message: 'Output Limit Exceeded', getOutput: () => 'Output Limit Exceeded' },
         10: { message: 'Runtime Error', getOutput: () => `Runtime Error: ${result.stderr ? decodeURIComponent(escape(atob(result.stderr))).trim() : 'Runtime Error'}` },
-        11: { message: 'Runtime Error', getOutput: () => decodeURIComponent(escape(atob(result.stderr))).trim() || 'Runtime Error' },
+        11: { message: 'Runtime Error', getOutput: () => decodeURIComponent(escape(atob(result.stderr || ''))).trim() || 'Runtime Error' },
         12: { message: 'Execution Timed Out', getOutput: () => 'Execution Timed Out' },
     };
 
@@ -66,11 +72,11 @@ const handleExecutionStatus = (result: any, testCase: any) => {
 };
 
 // Time and memory handler
-const getTimeAndMemory = (result: any) => {
+const getTimeAndMemory = (result: Judge0Result): { Time: string; Memory: string } => {
     if (result.status_id === 3) {
         return {
             Time: result.time || '0',
-            Memory: (result.memory / 1024).toFixed(2) || '0'
+            Memory: result.memory ? (result.memory / 1024).toFixed(2) : '0'
         };
     }
     return { Time: '0', Memory: '0' };
@@ -87,13 +93,13 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
     };
 
     const handleApiError = (error: ApiError) => {
-        console.error('API Error:', error);
+        logger.error('API Error:', error);
         
         // Handle rate limit errors
         if (error.code === 'RATE_LIMIT' || error.message.includes('Rate Limit') || error.message.includes('Insufficie')) {
             setShowApiLimitAlert(true);
             testCases.ErrorMessage = "Rate Limit Exceeded";
-            testCases.testCases.forEach((testCase: any) => {
+            testCases.testCases.forEach((testCase: TestCase) => {
                 testCase.Output = "Rate Limit Exceeded. Please wait or upgrade your API plan.";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
@@ -103,7 +109,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         // Handle network errors
         if (error.code === 'NETWORK_ERROR') {
             testCases.ErrorMessage = "Network Error";
-            testCases.testCases.forEach((testCase: any) => {
+            testCases.testCases.forEach((testCase: TestCase) => {
                 testCase.Output = "No internet connection. Please check your network and try again.";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
@@ -113,7 +119,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         // Handle timeout errors
         if (error.code === 'TIMEOUT') {
             testCases.ErrorMessage = "Request Timeout";
-            testCases.testCases.forEach((testCase: any) => {
+            testCases.testCases.forEach((testCase: TestCase) => {
                 testCase.Output = "Request timed out. The server is taking too long to respond.";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
@@ -123,7 +129,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         // Handle HTTP errors
         if (error.code === 'HTTP_ERROR') {
             testCases.ErrorMessage = `Server Error (${error.status || 'Unknown'})`;
-            testCases.testCases.forEach((testCase: any) => {
+            testCases.testCases.forEach((testCase: TestCase) => {
                 testCase.Output = getErrorMessage(error);
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
@@ -132,21 +138,21 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
 
         // Generic error
         testCases.ErrorMessage = "Execution Error";
-        testCases.testCases.forEach((testCase: any) => {
+        testCases.testCases.forEach((testCase: TestCase) => {
             testCase.Output = getErrorMessage(error);
             testCase.TimeAndMemory = { Time: '0', Memory: '0' };
         });
     };
 
-    const setCatchError = (error: any) => {
+    const setCatchError = (error: Error | ApiError | DOMException) => {
     // Handle abort errors
-    if (error.name === 'AbortError') {
+    if ('name' in error && error.name === 'AbortError') {
         resetStates();
         return;
     }
 
     // Check for network errors (TypeError usually means network issue)
-    if (error instanceof TypeError || error.name === 'TypeError') {
+    if (error instanceof TypeError || ('name' in error && error.name === 'TypeError')) {
         const errorMsg = (error.message || '').toLowerCase();
         if (errorMsg.includes('fetch') || 
             errorMsg.includes('network') || 
@@ -186,7 +192,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         compiler_options: compilerOptionsMap[language] || null,
     });
 
-    const processResults = async (tokens: string[], apiKey: string, region: string = 'AUTO') => {
+    const processResults = async (tokens: string[], apiKey: string, region: string = 'AUTO'): Promise<BatchResultsResponse> => {
         const controller = executionState.startNew();
         await new Promise((resolve, reject) => {
             const timeout = setTimeout(resolve, (language === 'kotlin' ? 6000 : EXECUTE_CODE_LIMIT) * testCases.testCases.length);
@@ -198,7 +204,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
 
         const endpoint = `https://ce.judge0.com/submissions/batch?base64_encoded=true&tokens=${tokens.join(',')}&fields=stdout,stderr,status,compile_output,status_id,time,memory`;
         
-        const { data, error } = await safeFetch(
+        const { data, error } = await safeFetch<BatchResultsResponse>(
             endpoint,
             {
                 method: 'GET',
@@ -216,7 +222,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             throw error;
         }
 
-        return data;
+        return data as BatchResultsResponse;
     };
 
     const executeCodeCE = async (code: string, apiKey: string, timeLimit: number) => {
@@ -251,24 +257,24 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
 
             // Validate batch response
             if (!batchResponse || !Array.isArray(batchResponse)) {
-                const errorDetail = batchResponse?.error || 'Invalid response from Judge0';
+                const errorDetail = (batchResponse as { error?: string })?.error || 'Invalid response from Judge0';
                 testCases.ErrorMessage = 'Compilation Error';
-                testCases.testCases.forEach((testCase: any) => {
+                testCases.testCases.forEach((testCase: TestCase) => {
                     testCase.Output = errorDetail;
                     testCase.TimeAndMemory = { Time: '0', Memory: '0' };
                 });
                 return;
             }
 
-            const tokens = batchResponse.map((submission: any) => submission.token);
+            const tokens = batchResponse.map((submission: SubmissionResponse) => submission.token);
             let results = await processResults(tokens, apiKey, 'AUTO');
 
             if (!results?.submissions) {
                 testCases.ErrorMessage = 'Compilation Error';
-                const errorDetail = results?.error 
-                    ? decodeURIComponent(escape(atob(results.error))) 
+                const errorDetail = (results as { error?: string })?.error 
+                    ? decodeURIComponent(escape(atob((results as { error: string }).error))) 
                     : 'Failed to get results';
-                testCases.testCases.forEach((testCase: any) => {
+                testCases.testCases.forEach((testCase: TestCase) => {
                     testCase.Output = errorDetail;
                     testCase.TimeAndMemory = { Time: '0', Memory: '0' };
                 });
@@ -287,24 +293,24 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
                 }
 
                 timeMemoryResults.push(getTimeAndMemory(result));
-                outputResults.push(handleExecutionStatus(result, testCases));
+                outputResults.push(handleExecutionStatus(result, testCases.testCases[timeMemoryResults.length - 1]));
             }
 
-            testCases.testCases.forEach((testCase: any, index: number) => {
+            testCases.testCases.forEach((testCase: TestCase, index: number) => {
                 testCase.Output = outputResults[index];
                 testCase.TimeAndMemory = timeMemoryResults[index];
             });
 
-        } catch (error: any) {
-            setCatchError(error);
+        } catch (error: unknown) {
+            setCatchError(error as Error | ApiError | DOMException);
         }
     };
 
     const executeCode = async (code: string, apiKey: string, timeLimit: number) => {
         try {
             await executeCodeCE(code, apiKey, timeLimit);
-        } catch (error: any) {
-            setCatchError(error);
+        } catch (error: unknown) {
+            setCatchError(error as Error | ApiError | DOMException);
         }
     };
 
@@ -326,7 +332,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         
         setIsRunning(true);
         testCases.ErrorMessage = '';
-        testCases.testCases.forEach((testCase: any) => {
+        testCases.testCases.forEach((testCase: TestCase) => {
             testCase.Output = '';
             testCase.TimeAndMemory = { Time: '0', Memory: '0' };
         });

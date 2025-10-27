@@ -75,6 +75,7 @@ export interface TestCase {
         Time: string;
         Memory: string;
     };
+    ErrorMessage?: string | null;
 }
 
 
@@ -105,4 +106,33 @@ export interface EditorSettingsTypes {
     autoSuggestions: boolean;
     minimap: boolean;
     lineNumbers: boolean;
+}
+
+export interface Judge0Result {
+    status_id: number;
+    stdout?: string;
+    stderr?: string;
+    compile_output?: string;
+    description?: string;
+    time?: string;
+    memory?: number;
+}
+
+export interface SubmissionResponse {
+    token: string;
+}
+
+export interface BatchResultsResponse {
+    submissions: Judge0Result[];
+    error?: string;
+}
+
+export interface ChromeMessage {
+    action: string;
+    [key: string]: unknown;
+}
+
+export interface ChromeSender {
+    tab?: chrome.tabs.Tab;
+    id?: string;
 }

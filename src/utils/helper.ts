@@ -1,15 +1,12 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { useEditorSettings } from './hooks/useEditorSettings';
-const { getEditorSettings } = useEditorSettings(useCFStore.getState().editorSettings, useCFStore.getState().setEditorSettings);
-
 import { CodeEntry, TestCaseArray } from "../types/types";
 import { Queue } from "./Queue";
 import { toast } from 'sonner';
 import { useCFStore } from '../zustand/useCFStore';
 
 // In-memory storage for Map and Queue
-let testCaseMap: Map<string, TestCaseArray> = new Map<string, TestCaseArray>();
-let testCaseQueue: Queue<string> = new Queue<string>();
+const testCaseMap: Map<string, TestCaseArray> = new Map<string, TestCaseArray>();
+const testCaseQueue: Queue<string> = new Queue<string>();
 
 export const getTestCaseMap = (): Map<string, TestCaseArray> => {
     return testCaseMap;
@@ -79,7 +76,7 @@ export const getSlug = (problemUrl: string): string | null => {
         switch (hostname) {
             case "codeforces.com":
             case "www.codeforces.com":
-                match = url.toString().match(/\/problemset\/problem\/([0-9]+)\/([^\/]+)|\/contest\/([0-9]+)\/problem\/([^\/]+)|\/gym\/([0-9]+)\/problem\/([^\/]+)/);
+                match = url.toString().match(/\/problemset\/problem\/([0-9]+)\/([^/]+)|\/contest\/([0-9]+)\/problem\/([^/]+)|\/gym\/([0-9]+)\/problem\/([^/]+)/);
 
                 if (match) {
                     if (match[1] && match[2]) {
@@ -97,7 +94,7 @@ export const getSlug = (problemUrl: string): string | null => {
             default:
                 return null;
         }
-    } catch (error) {
+    } catch {
         return null;
     }
 };
@@ -127,10 +124,10 @@ const getLangForBeautify = (language: string) => {
 
 export const formatCode = async (monacoInstanceRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>, language: string, setIsFormatting?: (isFormatting: boolean) => void) => {
     if (!monacoInstanceRef.current) return;
-    const editorSettings = getEditorSettings();
+    const editorSettings = useCFStore.getState().editorSettings;
     
     try {
-        setIsFormatting && setIsFormatting(true);
+        if (setIsFormatting) setIsFormatting(true);
         const currentCode = monacoInstanceRef.current.getValue();
         
         const response = await fetch('https://www.onlinegdb.com/beautify', {
@@ -154,9 +151,9 @@ export const formatCode = async (monacoInstanceRef: React.MutableRefObject<monac
         if (result.src) {
             monacoInstanceRef.current.setValue(result.src);
         }
-    } catch (error) {
+    } catch {
         toast.error(`Something went wrong. Please try again later.`);
     } finally {
-        setIsFormatting && setIsFormatting(false);
+        if (setIsFormatting) setIsFormatting(false);
     }
 };

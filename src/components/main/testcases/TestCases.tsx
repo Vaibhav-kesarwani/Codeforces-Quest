@@ -34,7 +34,12 @@ const TestCases = () => {
 
     // New effect for handling test case extraction errors
     useEffect(() => {
-        const handleMessage = (message: any) => {
+        interface TestCaseMessage {
+            testCaseError?: string;
+            testCase?: TestCase[];
+        }
+        
+        const handleMessage = (message: TestCaseMessage) => {
             if (message.testCaseError) {
                 setTestCaseError(message.testCaseError);
                 setIsRetrying(false);

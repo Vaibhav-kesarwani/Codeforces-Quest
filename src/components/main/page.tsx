@@ -117,12 +117,28 @@ const Main: React.FC<MainProps> = ({ setShowOptions, theme }) => {
 
     // Tab events listener
     useEffect(() => {
-        const listener = (message: any, sender: any, sendResponse: (response: any) => void) => {
-            return handleTabEvents(message, sender, sendResponse, monacoInstanceRef.current);
+        interface TabMessage {
+            action: string;
+            type: string;
+            url?: string;
+            [key: string]: unknown;
+        }
+        
+        interface TabResponse {
+            status: string;
+            message: string;
+        }
+        
+        const listener = (
+            message: TabMessage, 
+            _sender: chrome.runtime.MessageSender, 
+            sendResponse: (response: TabResponse) => void
+        ) => {
+            return handleTabEvents(message, _sender, sendResponse, monacoInstanceRef.current);
         };
         browserAPI.runtime.onMessage.addListener(listener);
         return () => browserAPI.runtime.onMessage.removeListener(listener);
-    }, [currentSlug, testCases]);
+    }, [currentSlug, testCases, handleTabEvents]);
 
     // Storage & testcases setup
     useEffect(() => {
