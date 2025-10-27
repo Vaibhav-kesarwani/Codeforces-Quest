@@ -28,7 +28,7 @@ jobs:
         run: npm ci
 
       - name: Run linter
-        run: npm run lint
+        run: npm run lint:ci
         continue-on-error: false
 
       - name: Run tests
@@ -63,7 +63,7 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: npm run lint
+        run: npm run lint:ci
 
   type-check:
     runs-on: ubuntu-latest
