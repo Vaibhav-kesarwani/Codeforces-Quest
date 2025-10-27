@@ -1,4 +1,5 @@
 import { browserAPI } from "./browser/browserDetect";
+import { logger } from "./logger";
 
 export interface ThemeSettings {
     brightness: number;
@@ -38,9 +39,9 @@ export const applyThemeSettings = (settings: ThemeSettings): void => {
             browserAPI.tabs.sendMessage(tabs[0].id, {
                 type: 'APPLY_CUSTOM_THEME',
                 settings
-            }, (response) => {
+            }, () => {
                 if (browserAPI.runtime.lastError) {
-                    console.log('Could not establish connection:', browserAPI.runtime.lastError.message);
+                    logger.warn('Could not establish connection:', browserAPI.runtime.lastError.message);
                 }
             });
         }

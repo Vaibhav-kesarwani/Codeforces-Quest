@@ -4,6 +4,8 @@ import { getProblemName } from "../dom/getProblemName";
 import { getProblemUrl } from "../dom/getProblemUrl";
 import { getUserId } from "../dom/getUserId";
 import { usageDataHelper } from "../usageDataHelper";
+import { TestCaseArray } from "../../types/types";
+import { logger } from "../logger";
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { browserAPI } from "../browser/browserDetect";
 
@@ -19,7 +21,7 @@ export const handleSubmission = async (
     editor: monaco.editor.IStandaloneCodeEditor | null,
     setIsSubmitting: (isSubmitting: boolean) => void,
     language: string,
-    testCases: any
+    testCases: TestCaseArray
 ): Promise<void> => {
     if (!editor) {
         alert("Wait for editor to load");
@@ -51,7 +53,7 @@ export const handleSubmission = async (
         try {
             tabs = await browserAPI.tabs.query({ active: true, currentWindow: true });
         } catch (error) {
-            console.error('Failed to query tabs:', error);
+            logger.error('Failed to query tabs:', error);
             alert("Failed to access browser tab. Please try again.");
             setIsSubmitting(false);
             return;
@@ -137,7 +139,7 @@ export const handleSubmission = async (
                 args: [editorValue]
             }, (results) => {
                 if (browserAPI.runtime.lastError) {
-                    console.error('Script execution error:', browserAPI.runtime.lastError);
+                    logger.error('Script execution error:', browserAPI.runtime.lastError);
                     resolve({
                         success: false,
                         error: browserAPI.runtime.lastError.message || 'Script execution failed'
@@ -183,19 +185,19 @@ export const handleSubmission = async (
                     problemName
                 );
             } catch (error) {
-                console.error('Failed to log usage data:', error);
+                logger.error('Failed to log usage data:', error);
                 // Don't block submission on analytics failure
             }
         }
 
         setIsSubmitting(false);
 
-    } catch (error: any) {
-        console.error('Submission error:', error);
+    } catch (error: unknown) {
+        logger.error('Submission error:', error);
         
         let errorMessage = 'An unexpected error occurred during submission.';
         
-        if (error.message) {
+        if (error instanceof Error && error.message) {
             if (error.message.includes('network')) {
                 errorMessage = 'Network error. Please check your connection.';
             } else if (error.message.includes('timeout')) {

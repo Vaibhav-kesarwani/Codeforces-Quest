@@ -1,6 +1,7 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { EditorSettingsTypes } from '../../types/types';
 import { DEFAULT_EDITOR_SETTINGS } from '../../data/constants';
+import { logger } from '../logger';
 
 export const useEditorSettings = (editorSettings: EditorSettingsTypes, setEditorSettings: (settings: EditorSettingsTypes) => void) => {
 
@@ -10,7 +11,7 @@ export const useEditorSettings = (editorSettings: EditorSettingsTypes, setEditor
             try {
                 return JSON.parse(storedSettings);
             } catch {
-                console.error('Failed to parse editor settings');
+                logger.error('Failed to parse editor settings');
             }
         }
         return DEFAULT_EDITOR_SETTINGS;

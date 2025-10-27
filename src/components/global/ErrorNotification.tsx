@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { AlertCircle, WifiOff, Clock, Server, XCircle } from 'lucide-react';
+import { logger } from '../../utils/logger';
 
 interface ErrorNotificationProps {
   message: string;
@@ -103,7 +104,7 @@ const ErrorNotificationDemo = () => {
   ]);
 
   const handleRetry = (id: number) => {
-    console.log(`Retrying notification ${id}`);
+    logger.info(`Retrying notification ${id}`);
   };
 
   const handleClose = (id: number) => {

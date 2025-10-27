@@ -4,7 +4,18 @@ import { saveCodeForSlug, saveTestCaseForSlug } from '../services/storageService
 import { loadCodeWithCursor } from '../codeHandlers';
 import { accessRestrictionMessage } from '../../data/constants';
 import { useTestCases } from './useTestCases';
+import { ChromeMessage, ChromeSender } from '../../types/types';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+interface TabEventMessage extends ChromeMessage {
+    type: string;
+    url?: string;
+}
+
+interface TabEventResponse {
+    status: string;
+    message: string;
+}
 
 export const useTabEvents = () => {
     const setCurrentUrl = useCFStore(state => state.setCurrentUrl);
@@ -14,9 +25,9 @@ export const useTabEvents = () => {
     const { loadTestCases } = useTestCases();
 
     const handleTabEvents = async (
-        message: any,
-        _sender: any,
-        sendResponse: (response: any) => void,
+        message: TabEventMessage,
+        _sender: ChromeSender,
+        sendResponse: (response: TabEventResponse) => void,
         editor: monaco.editor.IStandaloneCodeEditor | null
     ) => {
         try {
@@ -26,7 +37,7 @@ export const useTabEvents = () => {
                 message.type === 'WINDOW_FOCUSED' ||
                 message.type === 'USER_RETURNED'
             ) {
-                const newUrl = message.url;
+                const newUrl = message.url || '';
                 setCurrentUrl(newUrl);
 
                 if (currentSlug) {

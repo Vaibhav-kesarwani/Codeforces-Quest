@@ -9,6 +9,7 @@ import themesJSON from '../../../../themes/themelist.json';
 import { useEditorSettings } from '../../../utils/hooks/useEditorSettings';
 import { useCFStore } from '../../../zustand/useCFStore';
 import { getDefaultTemplate } from '../../../utils/services/codeTemplates';
+import { logger } from '../../../utils/logger';
 
 const editorStyle: React.CSSProperties = {
     height: '250px',
@@ -30,7 +31,7 @@ const CodeEditor = ({ monacoInstanceRef, language, fontSize, templateCode }: Cod
                     const themeData = await import(`../../../../themes/${themeName}.json`);
                     monaco.editor.defineTheme(themeKey, themeData.default);
                 } catch (error) {
-                    console.warn(`Failed to load theme ${themeKey}:`, error);
+                    logger.warn(`Failed to load theme ${themeKey}:`, error);
                 }
             }
 
