@@ -9,7 +9,7 @@ import { getTimeLimit } from '../dom/getTimeLimit';
 import { getProblemUrl } from '../dom/getProblemUrl';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { safeFetch, getErrorMessage, ApiError } from '../apiErrorHandler';
-import { Judge0Result, SubmissionResponse, TestCase } from '../../types/types';
+import { Judge0Result, SubmissionResponse, TestCase, BatchResultsResponse } from '../../types/types';
 import { logger } from '../logger';
 
 const languageMap: { [key: string]: number } = {
@@ -192,7 +192,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         compiler_options: compilerOptionsMap[language] || null,
     });
 
-    const processResults = async (tokens: string[], apiKey: string, region: string = 'AUTO') => {
+    const processResults = async (tokens: string[], apiKey: string, region: string = 'AUTO'): Promise<BatchResultsResponse> => {
         const controller = executionState.startNew();
         await new Promise((resolve, reject) => {
             const timeout = setTimeout(resolve, (language === 'kotlin' ? 6000 : EXECUTE_CODE_LIMIT) * testCases.testCases.length);
@@ -204,7 +204,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
 
         const endpoint = `https://ce.judge0.com/submissions/batch?base64_encoded=true&tokens=${tokens.join(',')}&fields=stdout,stderr,status,compile_output,status_id,time,memory`;
         
-        const { data, error } = await safeFetch(
+        const { data, error } = await safeFetch<BatchResultsResponse>(
             endpoint,
             {
                 method: 'GET',
@@ -222,7 +222,7 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             throw error;
         }
 
-        return data;
+        return data as BatchResultsResponse;
     };
 
     const executeCodeCE = async (code: string, apiKey: string, timeLimit: number) => {

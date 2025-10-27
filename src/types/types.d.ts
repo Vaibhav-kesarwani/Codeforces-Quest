@@ -122,6 +122,11 @@ export interface SubmissionResponse {
     token: string;
 }
 
+export interface BatchResultsResponse {
+    submissions: Judge0Result[];
+    error?: string;
+}
+
 export interface ChromeMessage {
     action: string;
     [key: string]: unknown;
