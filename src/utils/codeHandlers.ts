@@ -8,7 +8,7 @@ export const loadCodeWithCursor = (editor: monaco.editor.IStandaloneCodeEditor |
 
     const cursorPosition = code.indexOf('$0');
     
-    let cleanedCode = code.replace(/\$0/g, '');
+    const cleanedCode = code.replace(/\$0/g, '');
 
     editor.setValue(cleanedCode);
 

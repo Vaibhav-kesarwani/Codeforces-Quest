@@ -50,7 +50,7 @@ export const usageDataHelper = (language: string, testCases: TestCaseArray, user
     const handleUsageData = async (code: string, problemUrl: string, useType: string, problemName: string) => {
         try {
             await saveUsageData(code, problemUrl, useType, problemName);
-        } catch (error) {
+        } catch {
             return null;
         }
     }

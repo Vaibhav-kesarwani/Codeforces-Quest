@@ -31,7 +31,7 @@ const ApiSettings: React.FC = () => {
             } else {
                 toast.error('Invalid API key. Please check and try again');
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to validate API key. Please check your internet connection');
         }
     };

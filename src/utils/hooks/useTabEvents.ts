@@ -67,7 +67,7 @@ export const useTabEvents = () => {
             } else {
                 sendResponse({ status: 'error', message: 'Unhandled message type' });
             }
-        } catch (error) {
+        } catch {
             sendResponse({ status: 'error', message: 'Error handling tab event' });
         }
         return true;

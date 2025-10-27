@@ -34,7 +34,7 @@ export const useCodeManagement = (
     localStorage.setItem('preferredLanguage', selectedLanguage);
     const languageValue = getValueFromLanguage(selectedLanguage);
 
-    let [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
     browserAPI.scripting.executeScript(
       {
         target: { tabId: tab.id! },
@@ -79,7 +79,7 @@ export const useCodeManagement = (
   const handleRedirectToLatestSubmission = async () => {
     if (!currentSlug) return;
 
-    let [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
     browserAPI.scripting.executeScript(
       {
         target: { tabId: tab.id! },

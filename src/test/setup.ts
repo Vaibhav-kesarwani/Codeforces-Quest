@@ -36,4 +36,4 @@ global.chrome = {
     query: vi.fn(),
     sendMessage: vi.fn(),
   },
-} as any;
+} as unknown as typeof chrome;

@@ -6,7 +6,7 @@ export const deleteCodesFromLocalStorage = () => {
         localStorage.removeItem("slugQueue");
         localStorage.removeItem("codeMap");
         toast.success("Codes deleted successfully!");
-    } catch (error) {
+    } catch {
         toast.error("Failed to delete codes! Please try again later.");
     }
 };

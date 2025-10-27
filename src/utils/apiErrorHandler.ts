@@ -31,7 +31,7 @@ export class NetworkError extends Error {
 /**
  * Safe fetch wrapper with timeout and error handling
  */
-export async function safeFetch<T = any>(
+export async function safeFetch<T = unknown>(
   url: string,
   options?: RequestInit,
   timeout = 30000
@@ -135,7 +135,7 @@ export async function safeFetch<T = any>(
 /**
  * Retry logic for failed requests
  */
-export async function fetchWithRetry<T = any>(
+export async function fetchWithRetry<T = unknown>(
   url: string,
   options?: RequestInit,
   maxRetries = 2,
