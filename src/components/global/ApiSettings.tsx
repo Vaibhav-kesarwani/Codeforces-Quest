@@ -51,7 +51,7 @@ const ApiSettings: React.FC = () => {
         >
             <div className='flex items-center justify-between mb-4'>
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white">API Settings</h2>
-                <a className='text-blue-500 hover:text-blue-600 flex items-center gap-1' href="https://github.com/MaanasSehgal/Codeforces-Lite?tab=readme-ov-file#how-to-get-api-key" target='_blank'>
+                <a className='text-blue-500 hover:text-blue-600 flex items-center gap-1' href="https://github.com/Vaibhav-kesarwani/Codeforces-Quest/?tab=readme-ov-file#how-to-get-and-set-up-your-api-key" target='_blank'>
                     How to get API key?
                     <ExternalLink size={10} />
                 </a>
