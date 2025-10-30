@@ -33,11 +33,13 @@ export const getSlugQueue = (): Queue<string> => {
 export const getValueFromLanguage = (language: string) => {
     switch (language) {
         case "cpp":
-            return "89";
+            return "91";
         case "java":
             return "87";
         case "python":
             return "31";
+        case "pypy":
+            return "70";
         case "javascript":
             return "34";
         case "kotlin":
@@ -159,4 +161,40 @@ export const formatCode = async (monacoInstanceRef: React.MutableRefObject<monac
     } finally {
         setIsFormatting && setIsFormatting(false);
     }
+};
+
+export const normalizeShortcut = (shortcut: string): string => {
+  if(!shortcut || typeof shortcut !== 'string') return '';
+
+  return shortcut
+    .split('+')
+    .map(raw => {
+      const trimmed = raw.trim();
+
+      if(trimmed === '') return 'Space';
+
+      const lower = trimmed.toLowerCase();
+
+      switch (lower) {
+        case 'control':
+          return 'Ctrl';
+        case ' ':
+          return 'Space';
+        case 'arrowup':
+          return 'Up';
+        case 'arrowdown':
+          return 'Down';
+        case 'arrowleft':
+          return 'Left';
+        case 'arrowright':
+          return 'Right';
+        case 'escape':
+          return 'Esc';
+        case 'backspace':
+          return 'bksp';
+        default:
+          return lower;
+      }
+    })
+    .join(' + ');
 };

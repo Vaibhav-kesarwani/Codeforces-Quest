@@ -1,4 +1,3 @@
-// src/utils/hooks/useCodeExecution.ts
 import { useCFStore } from '../../zustand/useCFStore';
 import { adjustCodeForJudge0 } from '../codeAdjustments';
 import { EXECUTE_CODE_LIMIT, isProduction } from '../../data/constants';
@@ -9,13 +8,13 @@ import { getUserId } from '../dom/getUserId';
 import { getTimeLimit } from '../dom/getTimeLimit';
 import { getProblemUrl } from '../dom/getProblemUrl';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { safeFetch, getErrorMessage, ApiError } from '../apiErrorHandler';
 
 const languageMap: { [key: string]: number } = {
     'java': 62,
     'javascript': 63,
     'cpp': 54,
     'python': 71,
+    'pypy': 71,
     'kotlin': 78,
     'go': 106,
     'rust': 73,
@@ -86,97 +85,65 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         setIsRunning(false);
     };
 
-    const handleApiError = (error: ApiError) => {
-        console.error('API Error:', error);
-        
-        // Handle rate limit errors
-        if (error.code === 'RATE_LIMIT' || error.message.includes('Rate Limit') || error.message.includes('Insufficie')) {
+    const setCatchError = (error: any) => {
+        if (error?.name === 'AbortError') {
+            resetStates();
+            return;
+        }
+
+        if (error?.message?.includes("Insufficie")) {
             setShowApiLimitAlert(true);
             testCases.ErrorMessage = "Rate Limit Exceeded";
             testCases.testCases.forEach((testCase: any) => {
-                testCase.Output = "Rate Limit Exceeded. Please wait or upgrade your API plan.";
+                testCase.Output = "Rate Limit Exceeded";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
             return;
         }
 
-        // Handle network errors
-        if (error.code === 'NETWORK_ERROR') {
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
             testCases.ErrorMessage = "Network Error";
             testCases.testCases.forEach((testCase: any) => {
-                testCase.Output = "No internet connection. Please check your network and try again.";
+                testCase.Output = "Network error: Please check your internet connection.";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
             return;
         }
 
-        // Handle timeout errors
-        if (error.code === 'TIMEOUT') {
-            testCases.ErrorMessage = "Request Timeout";
+        if (error instanceof TypeError && /failed to fetch/i.test(String(error.message))) {
+            testCases.ErrorMessage = "Network Error";
             testCases.testCases.forEach((testCase: any) => {
-                testCase.Output = "Request timed out. The server is taking too long to respond.";
+                testCase.Output = "Network error: Please check your internet connection.";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
             return;
         }
 
-        // Handle HTTP errors
-        if (error.code === 'HTTP_ERROR') {
-            testCases.ErrorMessage = `Server Error (${error.status || 'Unknown'})`;
+        if (error?.isAxiosError && !error?.response) {
+            testCases.ErrorMessage = "Network Error";
             testCases.testCases.forEach((testCase: any) => {
-                testCase.Output = getErrorMessage(error);
+                testCase.Output = "Network error: Please check your internet connection.";
                 testCase.TimeAndMemory = { Time: '0', Memory: '0' };
             });
             return;
         }
 
-        // Generic error
-        testCases.ErrorMessage = "Execution Error";
+        const networkErrCodes = ['ENOTFOUND', 'ECONNREFUSED', 'ECONNABORTED', 'ETIMEDOUT', 'EHOSTUNREACH', 'EAI_AGAIN'];
+        if (error?.code && networkErrCodes.includes(String(error.code))) {
+            testCases.ErrorMessage = "Network Error";
+            testCases.testCases.forEach((testCase: any) => {
+                testCase.Output = "Network error: Please check your internet connection.";
+                testCase.TimeAndMemory = { Time: '0', Memory: '0' };
+            });
+            return;
+        }
+
+        testCases.ErrorMessage = "Internal Error";
         testCases.testCases.forEach((testCase: any) => {
-            testCase.Output = getErrorMessage(error);
+            testCase.Output = "Something went wrong. Please try again later or contact support.";
             testCase.TimeAndMemory = { Time: '0', Memory: '0' };
         });
     };
-
-    const setCatchError = (error: any) => {
-    // Handle abort errors
-    if (error.name === 'AbortError') {
-        resetStates();
-        return;
-    }
-
-    // Check for network errors (TypeError usually means network issue)
-    if (error instanceof TypeError || error.name === 'TypeError') {
-        const errorMsg = (error.message || '').toLowerCase();
-        if (errorMsg.includes('fetch') || 
-            errorMsg.includes('network') || 
-            errorMsg.includes('failed') ||
-            errorMsg.includes('internet')) {
-            handleApiError({
-                message: 'Network error. Please check your internet connection.',
-                code: 'NETWORK_ERROR'
-            });
-            return;
-        }
-    }
-
-    // Convert legacy error handling to new format
-    if (error.message?.includes("Insufficie") || error.message?.includes("Rate Limit")) {
-        handleApiError({
-            message: error.message,
-            code: 'RATE_LIMIT',
-            status: 429
-        });
-        return;
-    }
-
-    // Generic error fallback
-    handleApiError({
-        message: error.message || 'Unknown error occurred',
-        code: 'UNKNOWN_ERROR',
-        details: error
-    });
-};
 
     const createSubmissionPayload = (code: string, input: string, timeLimit: number) => ({
         language_id: languageMap[language],
@@ -196,81 +163,68 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             });
         });
 
-        const endpoint = `https://ce.judge0.com/submissions/batch?base64_encoded=true&tokens=${tokens.join(',')}&fields=stdout,stderr,status,compile_output,status_id,time,memory`;
-        
-        const { data, error } = await safeFetch(
-            endpoint,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Judge0-Region': region,
-                    'Authorization': apiKey ? `Bearer ${apiKey}` : ''
-                },
-                signal: controller.signal
-            },
-            30000
+        const resultsResponse = await makeJudge0CERequest(
+            `submissions/batch?base64_encoded=true&tokens=${tokens.join(',')}&fields=stdout,stderr,status,compile_output,status_id,time,memory`,
+            { method: 'GET', headers: { 'X-Judge0-Region': region } },
+            apiKey
         );
+        return resultsResponse.json();
+    };
 
-        if (error) {
-            throw error;
-        }
-
-        return data;
+    // Unified API handlers
+    const makeJudge0CERequest = async (endpoint: string, options: any, apiKey: string) => {
+        const controller = executionState.startNew();
+        const baseUrl = options.method === 'GET' ? 'https://ce.judge0.com' : 'https://judge0-ce.p.sulu.sh';
+        return fetch(`${baseUrl}/${endpoint}`, {
+            ...options,
+            headers: {
+                'Accept': 'application/json',
+                ...options.headers,
+                'Authorization': apiKey ? `Bearer ${apiKey}` : ''
+            },
+            signal: controller.signal
+        });
     };
 
     const executeCodeCE = async (code: string, apiKey: string, timeLimit: number) => {
-        const submissions = testCases.testCases.map(testCase => 
-            createSubmissionPayload(code, testCase.Input, timeLimit)
-        );
+        const submissions = testCases.testCases.map(testCase => createSubmissionPayload(code, testCase.Input, timeLimit));
 
         try {
-            const controller = executionState.startNew();
-            
-            // Submit batch request
-            const { data: batchResponse, error: submitError } = await safeFetch(
-                'https://judge0-ce.p.sulu.sh/submissions/batch?base64_encoded=true',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'Authorization': apiKey ? `Bearer ${apiKey}` : ''
-                    },
-                    body: JSON.stringify({ submissions }),
-                    signal: controller.signal
-                },
-                30000
-            );
+            const submitResponse = await makeJudge0CERequest('submissions/batch?base64_encoded=true', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ submissions })
+            }, apiKey);
 
-            // Handle submission errors
-            if (submitError) {
-                handleApiError(submitError);
-                return;
-            }
-
-            // Validate batch response
-            if (!batchResponse || !Array.isArray(batchResponse)) {
-                const errorDetail = batchResponse?.error || 'Invalid response from Judge0';
-                testCases.ErrorMessage = 'Compilation Error';
+            if (submitResponse.status === 429) {
+                setShowApiLimitAlert(true);
+                testCases.ErrorMessage = "Rate Limit Exceeded";
                 testCases.testCases.forEach((testCase: any) => {
-                    testCase.Output = errorDetail;
+                    testCase.Output = "Rate Limit Exceeded";
                     testCase.TimeAndMemory = { Time: '0', Memory: '0' };
                 });
                 return;
             }
 
-            const tokens = batchResponse.map((submission: any) => submission.token);
-            let results = await processResults(tokens, apiKey, 'AUTO');
+            const batchResponse = await submitResponse.json();
 
-            if (!results?.submissions) {
-                testCases.ErrorMessage = 'Compilation Error';
-                const errorDetail = results?.error 
-                    ? decodeURIComponent(escape(atob(results.error))) 
-                    : 'Failed to get results';
+            if (!batchResponse || !Array.isArray(batchResponse)) {
+                const errorDetail = batchResponse?.error || 'Unknown error';
+                testCases.ErrorMessage = `Compilation Error`;
                 testCases.testCases.forEach((testCase: any) => {
                     testCase.Output = errorDetail;
-                    testCase.TimeAndMemory = { Time: '0', Memory: '0' };
+                });
+                return;
+            }
+
+            const tokens = batchResponse.map(submission => submission.token);
+            let results = await processResults(tokens, apiKey, submitResponse.headers.get('X-Judge0-Region') || 'AUTO');
+
+            if (!results?.submissions) {
+                testCases.ErrorMessage = `Compilation Error`;
+                const errorDetail = decodeURIComponent(escape(atob(results?.error))) || 'Compilation Error';
+                testCases.testCases.forEach((testCase: any) => {
+                    testCase.Output = errorDetail;
                 });
                 return;
             }
@@ -294,7 +248,6 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
                 testCase.Output = outputResults[index];
                 testCase.TimeAndMemory = timeMemoryResults[index];
             });
-
         } catch (error: any) {
             setCatchError(error);
         }
@@ -313,7 +266,6 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             alert("Wait for editor to load");
             return;
         }
-        
         const problemName = await getProblemName();
         const userId = await getUserId();
         const timeLimit = await getTimeLimit();
@@ -323,8 +275,18 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
             alert("Please login to run code");
             return;
         }
-        
         setIsRunning(true);
+
+        if (navigator.onLine === false) {
+            testCases.ErrorMessage = "Network Error";
+            testCases.testCases.forEach((testCase: any) => {
+                testCase.Output = "Network error: Please check your internet connection.";
+                testCase.TimeAndMemory = { Time: '0', Memory: '0' };
+            });
+            setIsRunning(false);
+            return;
+        }
+
         testCases.ErrorMessage = '';
         testCases.testCases.forEach((testCase: any) => {
             testCase.Output = '';
@@ -336,6 +298,10 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
 
         if (!code) {
             testCases.ErrorMessage = 'No code provided';
+            testCases.testCases.forEach((testCase: any) => {
+                testCase.Output = 'No code provided, please write some code to run';
+                testCase.TimeAndMemory = { Time: '0', Memory: '0' };
+            });
             setIsRunning(false);
             return;
         }
@@ -343,14 +309,11 @@ export const useCodeExecution = (editor: monaco.editor.IStandaloneCodeEditor | n
         await executeCode(code, apiKey || "", timeLimit);
 
         setIsRunning(false);
+        problemName;
+        problemUrl
 
         if (isProduction) {
-            await usageDataHelper(language, testCases, userId).handleUsageData(
-                code, 
-                problemUrl, 
-                "RUN", 
-                problemName
-            );
+            await usageDataHelper(language, testCases, userId).handleUsageData(code, problemUrl, "RUN", problemName);
         }
     };
 
