@@ -6,47 +6,57 @@
 # Codeforces Quest
 
 #### A Chrome extension with a sidebar that enhances the Codeforces experience, transforming it into a more efficient and productive platform for competitive programmers.
+
 ---
 
-## 🌟 GSSoC 
+## GSSoC
+
 ![GSSoC Logo](public/assets/images/GSSoC.png)
-🌟 **Exciting News...**
-This project is now an official part of GirlScript Summer of Code – GSSoC'25! 🎉 We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow *Codeforces-Quest!* Let’s make learning and career development smarter – together!
+**Exciting News...**
+This project is now an official part of GirlScript Summer of Code – GSSoC'25! We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow _Codeforces-Quest!_ Let’s make learning and career development smarter – together!
 
 GSSoC is one of India’s **largest 3-month-long open-source programs** that encourages developers of all levels to contribute to real-world projects while learning, collaborating, and growing together.
 
 With **mentorship, community support**, and **collaborative coding**, it's the perfect platform for developers to:
 
-- ✨ Improve their skills
-- 🤝 Contribute to impactful projects
-- 🏆 Get recognized for their work
-- 📜 Receive certificates and swag!
+- Improve their skills
+- Contribute to impactful projects
+- Get recognized for their work
+- Receive certificates and swag!
 
 **I can’t wait to welcome new contributors** from GSSoC 2025 to this Codeforces-Quest project family! Let's build, learn, and grow together — one commit at a time.
 
-## 🏆 **GSSoC 2025 Guidelines**
-### 📋 **For Participants**
+## **GSSoC 2025 Guidelines**
+
+### **For Participants**
+
 #### **Do's**
+
 - ✅ **Read documentation** thoroughly before contributing
 - ✅ **Follow code style** and project structure
 - ✅ **Write descriptive** commit messages
 - ✅ **Test your changes** before submitting PR
 - ✅ **Be respectful** and collaborative
 - ✅ **Ask questions** if you're unsure about anything
+
 #### **Don'ts**
+
 - ❌ **Don't spam** with multiple PRs for same issue
 - ❌ **Don't copy code** without understanding
 - ❌ **Don't make unnecessary** changes
 - ❌ **Don't ignore** code review feedback
 - ❌ **Don't forget** to update documentation when needed
+
 ### **Contribution Levels**
-| Level | Description | Points | Badge |
-|-------|-------------|--------|-------|
-| 🥉 **Beginner** | Fix typos, update docs, minor bug fixes | 5-10 | ![Beginner](https://img.shields.io/badge/Level-Beginner-green) |
-| 🥈 **Intermediate** | Add features, improve UI/UX, performance | 15-25 | ![Intermediate](https://img.shields.io/badge/Level-Intermediate-blue) |
-| 🥇 **Advanced** | Major features, architecture improvements | 30-50 | ![Advanced](https://img.shields.io/badge/Level-Advanced-red) |
+
+| Level               | Description                               | Points | Badge                                                                 |
+| ------------------- | ----------------------------------------- | ------ | --------------------------------------------------------------------- |
+| 🥉 **Beginner**     | Fix typos, update docs, minor bug fixes   | 5-10   | ![Beginner](https://img.shields.io/badge/Level-Beginner-green)        |
+| 🥈 **Intermediate** | Add features, improve UI/UX, performance  | 15-25  | ![Intermediate](https://img.shields.io/badge/Level-Intermediate-blue) |
+| 🥇 **Advanced**     | Major features, architecture improvements | 30-50  | ![Advanced](https://img.shields.io/badge/Level-Advanced-red)          |
 
 ---
+
 # Overview
 
 ![Hero Section](/public/assets/images/overview.png)
@@ -65,40 +75,41 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 
 #### Write, test, and submit your code right from the problem page using our advanced Monaco editor—no need to switch tabs or upload files manually.
 
-### 🔑 Key Features
+### Key Features
 
-- #### 🗂️ Default Language Selector
+- #### Default Language Selector
+
   - Easily switch between popular languages:
-`C++`, `Python`, `Java`, `JavaScript`, `Kotlin`, `Go`, `Rust`, `Ruby`
+    `C++`, `Python`, `Java`, `JavaScript`, `Kotlin`, `Go`, `Rust`, `Ruby`
 
-- #### 🧑‍💻 Rich Monaco Editor Capabilities
-  
+- #### Rich Monaco Editor Capabilities
+
   - Syntax highlighting with multiple theme options
-  
+
   - Intelligent code suggestions and autocomplete
-  
+
   - Customizable indentation, line wrapping, and font size
-  
+
   - Minimap for quick navigation
-  
+
   - Line numbers and full editor personalization
 
-- #### ⚙️ Built-in Code Execution System
-  
-  -  Automatically save code locally for each problem
-  
-  -  Retrieve previous submissions on revisit
-  
-  -  Efficiently manage `1000+` files (200+ lines each)
-  
-  -  Optimized storage using HashMap + Queue cleanup logic
+- #### Built-in Code Execution System
 
-- #### ⏱️ Practice Mode Enhancements
-  
+  - Automatically save code locally for each problem
+
+  - Retrieve previous submissions on revisit
+
+  - Efficiently manage `1000+` files (200+ lines each)
+
+  - Optimized storage using HashMap + Queue cleanup logic
+
+- #### Practice Mode Enhancements
+
   - Built-in timer to track practice sessions
-  
+
   - Auto-tab indentation for smooth coding flow
-  
+
   - Language-specific code formatting support
 
 #### This all-in-one solution brings coding, testing, and submission into a unified, streamlined interface—supercharging your competitive programming experience on Codeforces.
@@ -107,56 +118,56 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 
 #### Experience fast, reliable code execution directly within the editor, powered by the robust Judge0 API. Enjoy real-time feedback across multiple languages without leaving the problem page. Our system seamlessly handles compilation results, making debugging clear and efficient.
 
-- ### 🔌 API Configuration
-  
+- ### API Configuration
+
   - Secure and scalable code execution using [Judge0](https://judge0.com/)
-  
+
   - Supports multiple languages with real-time output
-  
+
   - Seamless integration with editor for code submission and result fetching
 
-  ![Api Configuration](/public/assets/images/api-configuration.png) 
-  
-- ### 📤 Compilation Results Handling
-  
+  ![Api Configuration](/public/assets/images/api-configuration.png)
+
+- ### Compilation Results Handling
+
   - Structured output displaying
-  
-    - Execution results 
-  
+
+    - Execution results
+
     - Time and memory metrics
-  
+
     - Compilation and runtime errors (with **syntax context**)
-  
+
   - Color-coded feedback for fast debugging
-  
+
   - Clear distinction between sample test cases and custom inputs
 
-  | Test Case Pass | Test Case Fail |
-  |----------------|----------------|
+  | Test Case Pass                                | Test Case Fail                                |
+  | --------------------------------------------- | --------------------------------------------- |
   | ![](/public/assets/images/test-case-pass.png) | ![](/public/assets/images/test-case-fail.png) |
 
-- ### 🚧 Limitations and Future Enhancements
-  
+- ### Limitations and Future Enhancements
+
   - **Current Limitations**
-  
+
     - No support for interactive problems yet
-  
+
     - Editor settings are not synced across devices
-  
+
     - Supports live contests but does not display the scoreboard.
-  
+
     - Requires internet access for code execution via Judge0
-  
+
   - **Upcoming Features**
-  
+
     - Interactive problem support
-  
+
     - AI-powered hint system and problem insights
-  
+
     - Contest mode with lockable editor and timed submissions
-  
+
     - GitHub integration to sync and save progress
-  
+
 #### While currently limited in some areas, Codeforces Quest is rapidly evolving with exciting features like interactive problem support, AI-powered hints, and contest modes. We’re committed to enhancing your coding workflow with smarter tools and seamless integrations.
 
 ## 3. Dark Mode with Enhanced Customization Options
@@ -165,8 +176,7 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 
 #### Codeforces Quest features a carefully optimized dark theme that enhances visual comfort, especially during long coding sessions. It delivers a seamless and consistent appearance across the entire platform.
 
-### 🌙 Key Features of the Dark Theme
-
+### Key Features of the Dark Theme
 
 - **Eye Comfort:** Minimizes eye strain by reducing screen-to-environment contrast, ideal for low-light conditions and long coding sessions.
 
@@ -177,6 +187,7 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 - **User Control:** Easily toggle between dark and light modes to suit your personal preference anytime.
 
 - **Theme Customizer:** Personalize your dark theme experience with adjustable settings including
+
   - Brightness
   - Contrast
   - Sepia tone
@@ -191,69 +202,66 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 
 #### Codeforces Quest now offers a diverse selection of editor themes tailored to fit your unique coding style and preferences.
 
+- **Classic Themes:** `Default`, `Dark`, `Light`, `High Contrast` — timeless and reliable.
 
-- **🏛️ Classic Themes:** `Default`, `Dark`, `Light`, `High Contrast` — timeless and reliable.
+- **Popular Coding Themes:** `Monokai`, `Dracula`, `GitHub`, `Nord`, `Solarized`, and many more to fit your vibe.
 
-- **🌟 Popular Coding Themes:** `Monokai`, `Dracula`, `GitHub`, `Nord`, `Solarized`, and many more to fit your vibe.
+- **Seamless Switching:** Change themes instantly without interrupting your flow.
 
-- **🔄 Seamless Switching:** Change themes instantly without interrupting your flow.
-
-- **👀 Theme Preview:** Try before you pick to find your perfect coding look.
+- **Theme Preview:** Try before you pick to find your perfect coding look.
 
 ## 5. Custom Templates & Smart Cursor Placement
 
 ![Custom template](/public/assets/images/custom-template.png)
 
-- **✨ Auto-Loaded Templates:** Automatically load your custom code templates when opening a new problem—no more writing boilerplate from scratch.
+- **Auto-Loaded Templates:** Automatically load your custom code templates when opening a new problem—no more writing boilerplate from scratch.
 
-- **⚙️ Predefined Boilerplate:** Include common code like I/O functions, imports, and debug snippets to jump straight into solving.
+- **Predefined Boilerplate:** Include common code like I/O functions, imports, and debug snippets to jump straight into solving.
 
-- **🚀 Boosts Productivity:** Focus directly on problem-solving, reducing setup time during contests or practice.
+- **Boosts Productivity:** Focus directly on problem-solving, reducing setup time during contests or practice.
 
-- **🎯 Smart Cursor Placement:** Use the `$0` marker in your template to set the starting cursor position exactly where you need it.
+- **Smart Cursor Placement:** Use the `$0` marker in your template to set the starting cursor position exactly where you need it.
 
-- **🔁 Cursor Memory:** Remembers your cursor position when switching tabs or revisiting problems—pick up right where you left off.
+- **Cursor Memory:** Remembers your cursor position when switching tabs or revisiting problems—pick up right where you left off.
 
 ## 6. UI Enhancements
 
-| Login UI | Problem UI |
-|------------|----------|
+| Login UI                                | Problem UI                                |
+| --------------------------------------- | ----------------------------------------- |
 | ![](/public/assets/images/login-ui.png) | ![](/public/assets/images/problem-ui.png) |
 
 #### Codeforces Quest upgrades the overall UI of Codeforces, making it more accessible, visually polished, and user-friendly.
 
 #### Interface elements are repositioned and refined for a cleaner layout and smoother navigation experience.
 
+- **Refined Interface:** Makes Codeforces more accessible, visually appealing, and user-friendly.
 
-- **🎨 Refined Interface:** Makes Codeforces more accessible, visually appealing, and user-friendly.
+- **Improved Layout:** Optimized element positioning for a cleaner and more intuitive navigation experience.
 
-- **🧭 Improved Layout:** Optimized element positioning for a cleaner and more intuitive navigation experience.
+- **Structured Problemset Page:** Enhanced alignment and spacing for a more organized and readable layout.
 
-- **🗂️ Structured Problemset Page:** Enhanced alignment and spacing for a more organized and readable layout.
+- **Modernized Auth Pages:** Redesigned login and registration pages for a smoother and faster onboarding experience.
 
-- **🔐 Modernized Auth Pages:** Redesigned login and registration pages for a smoother and faster onboarding experience.
+- **Dark Theme Consistency:** Custom styling across extension components to perfectly match the dark theme.
 
-- **🌑 Dark Theme Consistency:** Custom styling across extension components to perfectly match the dark theme.
-
-- **🕹️ User Control:** Toggle the enhanced UI on or off at any time—switch easily between the original and improved layouts based on your preference.
+- **User Control:** Toggle the enhanced UI on or off at any time—switch easily between the original and improved layouts based on your preference.
 
 ## 7. Code Formatting
 
 #### Codeforces Quest now features a powerful built-in code formatter to keep your code neat and readable
 
+- **One-Click Formatting** for all supported languages
 
-- **⚡ One-Click Formatting** for all supported languages
+- **Language-Specific Rules** to match standard coding styles
 
-- **📘 Language-Specific Rules** to match standard coding styles
-
-- **🔧 Customizable Indentation** to suit your personal preferences
-
+- **Customizable Indentation** to suit your personal preferences
 
 ---
 
 # Browser Compatibility
 
 #### Codeforces Quest now works seamlessly across multiple browsers:
+
 - [Google Chrome]()
 - [Mozilla Firefox]()
 - [Brave Browser]()
@@ -267,66 +275,65 @@ With **mentorship, community support**, and **collaborative coding**, it's the p
 
 To enable the `Run Code` feature, follow these simple steps:
 
-
 1. Go to [Sulu > Consumer Dashboard](https://platform.sulu.sh/portal/consumer/dashboard?period=7_days)
 
 2. **Sign up or log in** to your Sulu account
 
 3. Under the **Authentication section**, copy your **Live API Key**
 
-    ![Api key](/public/assets/images/api-config-key.png)
+   ![Api key](/public/assets/images/api-config-key.png)
 
-1. Make sure to **subscribe** to activate API usage
+4. Make sure to **subscribe** to activate API usage
 
-2. Open the **Codeforces Quest** extension and navigate to **API Settings**
+5. Open the **Codeforces Quest** extension and navigate to **API Settings**
 
-3. Click `Edit`, then paste your **API key**
+6. Click `Edit`, then paste your **API key**
 
-    ![Edit api key](/public/assets/images/api-configuration.png)
+   ![Edit api key](/public/assets/images/api-configuration.png)
 
-4. Hit **Save** — the Run Code feature is now ready to use!
+7. Hit **Save** — the Run Code feature is now ready to use!
 
 ---
 
 # Contributing
 
-#### Contributions make this project better and help build an amazing open-source community.  
-#### If you'd like to contribute, please check out our [Contribution Guide](CONTRIBUTING.md) to get started with setup instructions, guidelines, and best practices.  
+#### Contributions make this project better and help build an amazing open-source community.
+
+#### If you'd like to contribute, please check out our [Contribution Guide](CONTRIBUTING.md) to get started with setup instructions, guidelines, and best practices.
 
 #### We welcome your ideas, bug fixes, and new features!
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License**.  
 Feel free to use, modify, and share it. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 📢 Contact
+## Contact
 
 If you have any suggestions, questions, or feedback, feel free to reach out:
 
-- 📬 **Email**: [vaibhavkesarwani100@gmail.com](mailto:vaibhavkesarwani100@gmail.com)  
-- 💼 **GitHub**: [@Vaibhav-kesarwani](https://github.com/Vaibhav-kesarwani)
-- 🔥 **Portfolio**: [vaibhav kesarwani](https://vaibhavkesarwani.vercel.app/)
+- **Email**: [vaibhavkesarwani100@gmail.com](mailto:vaibhavkesarwani100@gmail.com)
+- **GitHub**: [@Vaibhav-kesarwani](https://github.com/Vaibhav-kesarwani)
+- **Portfolio**: [vaibhav kesarwani](https://vaibhavkesarwani.vercel.app/)
 
 ---
 
-## 🌟 Support & Share
+## Support & Share
 
 If you find this repository helpful:
 
-- ⭐ Star it on GitHub  
-- 🍴 Fork it to build your own version  
-- 📣 Share it with your developer friends and communities!
+- Star it on GitHub
+- Fork it to build your own version
+- Share it with your developer friends and communities!
 
 ---
 
-## ✨ Contributors
+## Contributors
 
-#### Thanks to all the wonderful contributors 💖
+#### Thanks to all the wonderful contributors ✨
 
 [![Contributors](https://contrib.rocks/image?repo=Vaibhav-kesarwani/Codeforces-Quest)](https://github.com/Vaibhav-kesarwani/Codeforces-Quest/graphs/contributors)
-
