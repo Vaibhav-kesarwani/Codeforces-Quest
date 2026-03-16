@@ -23,3 +23,6 @@ export default tseslint.config(
         },
     }
 );
+
+            "no-console": ["warn", { allow: ["warn", "error"] }], // Warn for console.log, info, debug for better code quality
+            "@typescript-eslint/no-explicit-any": "warn", // Warn against using 'any' type for improved type safety
